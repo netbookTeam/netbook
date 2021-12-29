@@ -64,3 +64,7 @@ def registerPage(request):
         'formInfo':form2,
     }
     return render(request, 'Ebook/register.html', context)
+
+def logoutUser(request):
+	logout(request)
+	return redirect('login')
