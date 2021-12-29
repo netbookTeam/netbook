@@ -16,3 +16,9 @@ class CreateUserInfoForm(ModelForm):
 	class Meta:
 		model = UserInfo
 		fields = ['name' , 'email' , 'phone' , 'address']
+
+class CreateNovelForm(ModelForm):
+	class Meta:
+		model = Novel
+		fields = ['title' , 'description' , 'thumbnail' , 'tags']
+

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from django.db.models.fields import IntegerField
-from django.db.models.fields.related import ForeignKey
+from django.db.models.fields.related import ForeignKey, ManyToManyField
 
 # Create your models here.
 
@@ -27,16 +27,33 @@ class UserInfo(models.Model):
     def __str__(self):
         return self.name
 
+class Tag(models.Model):
+    name = models.CharField(max_length=200, null=True)
+ 
+    def __str__(self):
+        return self.name
+
 class Novel(models.Model):
     title = models.CharField(max_length=200, null=True)
     description = models.CharField(max_length=400, null=True)
-    thumbnail = models.ImageField(default="placeholder.png", null=True, blank=True)
+    thumbnail = models.ImageField(default="placeholder.png", null=True, blank=True,upload_to="images/")
+    userinfo = ForeignKey(UserInfo,null=True, blank=True,on_delete=models.CASCADE)
+    tags = ManyToManyField(Tag)
+    def __str__(self):    
+        return self.title
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=200, null=True)
+
 
 class Chapter(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True, on_delete=models.CASCADE)
     number = IntegerField()
     content = models.CharField(max_length=1000, null=True)
+    
+
+class NovelTag(models.Model):
+    novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
+    tag = ForeignKey(Tag,null=True, blank=True,on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return str(self.novel.title)+" "+str(self.tag.name)
