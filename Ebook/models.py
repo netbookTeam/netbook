@@ -22,7 +22,7 @@ class UserInfo(models.Model):
     email = models.CharField(max_length=200, null=True)
     phone = models.CharField(max_length=200, null=True)
     address = models.CharField(max_length=200, null=True)
-    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES,blank=True,null=True)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES,blank=True,null=True,default=CUSTOMER)
     
     def __str__(self):
         return self.name
