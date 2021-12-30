@@ -93,3 +93,12 @@ def createNovel(request):
         "form":form,
     }
     return render(request, "Ebook/create_novel.html",context)
+
+def search(request):
+    novels=[]
+    if request.method=="GET":
+        keyword=request.GET.get("keyword")
+        print("keyword : ",keyword)
+        novels=list(Novel.objects.filter(title__contains=keyword))
+        print(novels)
+    return render(request,"Ebook/search.html",{"novels":novels})

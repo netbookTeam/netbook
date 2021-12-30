@@ -1,6 +1,6 @@
 {% load static %}
-
-
+<link rel="stylesheet" href="{% static '/css/navbar.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <style>
   .hello-msg{
     font-size: 18px;
@@ -23,16 +23,7 @@
       {% endif %}
     </ul>
   </div>
-  <div class="input-group search-holder">
-    <meta itemprop="target" content="https://truyenfull.vn/tim-kiem/?tukhoa={tukhoa}">
-      <input aria-label="Từ khóa tìm kiếm" role="search key" class="form-control" id="search-input" type="search" name="tukhoa" placeholder="Tìm kiếm..." value="" itemprop="query-input" required="">
-        <div class="input-group-btn">
-          <button class="btn btn-default" type="submit" aria-label="Tìm kiếm" role="search">
-            <span class="glyphicon glyphicon-search">
-            </span>
-          </button>
-        </div>
-      </div>
+  <form class="navbar-form navbar-right" action="https://truyenfull.vn/tim-kiem/" role="search" itemprop="potentialAction" itemscope="" itemtype="https://schema.org/SearchAction"><div class="input-group search-holder"><input aria-label="Từ khóa tìm kiếm" role="search key" class="form-control" id="search-input" type="search" name="tukhoa" placeholder="Tìm kiếm..." value="" itemprop="query-input" required=""><div class="input-group-btn"><button class="btn btn-default" type="submit" aria-label="Tìm kiếm" role="search"><span class="glyphicon glyphicon-search"></span></button></div></div><div class="list-group list-search-res hide"></div></form>
   {% if request.user.is_authenticated %}
   <span class="hello-msg">Hello, {{request.user.username}}</span>
   <span ><a  class="hello-msg" href="{% url 'logout' %}">Logout</a></span>
