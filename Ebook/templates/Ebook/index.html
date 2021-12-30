@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Index</title>
+    <link rel="stylesheet" href="{% static '/css/index.css' %}">
+</head>
+<body>
+    {%  include 'Ebook/navbar.html' %}
+    <div class="title-list">
+        <h2>Truyện Hot</h2>
+        <a href="https://truyenfull.vn/danh-sach/truyen-hot/" title="Truyện hot">
+        </a>
+    </div>
+    <div class="container" id="intro-index">
+        <div class="index-intro">
+            {% for novel in novels %}
+            <div class="item top-1" itemscope="" itemtype="https://schema.org/Book">
+                <a href="https://truyenfull.vn/mao-son-troc-quy-nhan/" itemprop="url">
+                    <span class="full-label">
+                    </span>
+                    <img src="{{ MEDIA_URL }}/{{ novel.thumbnail }}">
+                    <div class="title">
+                        <h3 itemprop="name">{{ novel.title }}</h3>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+    
+</body>
+</html>

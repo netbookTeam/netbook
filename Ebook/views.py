@@ -1,6 +1,8 @@
 from django.core.checks import messages
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+
+from .models import Novel
 from .decorator import authenticated_user,admin_only,unauthenticated_user
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -12,7 +14,9 @@ from django.core.files import File
 # Create your views here.
 
 def index(request):
-    return render(request,"Ebook/main.html",{"name":"index"})
+    novels=list(Novel.objects.all())
+    print(type(novels))
+    return render(request,"Ebook/index.html",{"novels":novels})
 
 @authenticated_user
 def home(request):

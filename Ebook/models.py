@@ -35,8 +35,8 @@ class Tag(models.Model):
 
 class Novel(models.Model):
     title = models.CharField(max_length=200, null=True)
-    description = models.CharField(max_length=400, null=True)
-    thumbnail = models.ImageField(default="placeholder.png", null=True, blank=True,upload_to="images/")
+    description = models.TextField()
+    thumbnail = models.ImageField(default="images/placeholder.png", null=True, blank=True,upload_to="images/")
     userinfo = ForeignKey(UserInfo,null=True, blank=True,on_delete=models.CASCADE)
     tags = ManyToManyField(Tag)
     def __str__(self):    
@@ -48,7 +48,10 @@ class Novel(models.Model):
 class Chapter(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True, on_delete=models.CASCADE)
     number = IntegerField()
-    content = models.CharField(max_length=1000, null=True)
+    content = models.TextField()
+
+    def __str__(self):
+        return str(self.novel.title)+"_"+str(self.number)
     
 
 class NovelTag(models.Model):

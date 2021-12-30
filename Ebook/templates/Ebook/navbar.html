@@ -23,8 +23,24 @@
       {% endif %}
     </ul>
   </div>
-
+  <div class="input-group search-holder">
+    <meta itemprop="target" content="https://truyenfull.vn/tim-kiem/?tukhoa={tukhoa}">
+      <input aria-label="Từ khóa tìm kiếm" role="search key" class="form-control" id="search-input" type="search" name="tukhoa" placeholder="Tìm kiếm..." value="" itemprop="query-input" required="">
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" aria-label="Tìm kiếm" role="search">
+            <span class="glyphicon glyphicon-search">
+            </span>
+          </button>
+        </div>
+      </div>
+  {% if request.user.is_authenticated %}
   <span class="hello-msg">Hello, {{request.user.username}}</span>
   <span ><a  class="hello-msg" href="{% url 'logout' %}">Logout</a></span>
+  {% endif %}
 
+  {% if not request.user.is_authenticated %}
+  <span ><a  class="hello-msg" href="{% url 'login' %}">Login</a></span>
+  {% endif %}
+
+  
 </nav>
