@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.template.defaultfilters import slugify
 
-from .models import Novel, Chapter
+from .models import Novel, Chapter, Tag
 from .decorator import authenticated_user,admin_only,unauthenticated_user, author_check, author_or_admin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -86,6 +86,15 @@ def search(request):
         print(novels)
     return render(request,"Ebook/search.html",{"novels":novels})
 
+def search_tag(request, slug=None):
+    novels=[]
+    if request.method=="GET":
+        tag = Tag.objects.get(slug=slug)
+        print("tag : ",tag)
+        novels = list(tag.novel_set.all())
+        print("novels : ",novels)
+    return render(request,"Ebook/search.html",{"novels":novels})
+
 @authenticated_user
 @author_or_admin
 @author_check
@@ -162,3 +171,4 @@ def createChapter(request, slug=None):
         "form":form
     }
     return render(request,"Ebook/create_chapter.html",context)
+

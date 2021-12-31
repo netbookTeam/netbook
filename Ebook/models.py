@@ -31,9 +31,15 @@ class UserInfo(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, null=True)
- 
+    slug = models.SlugField(null=False)
+
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args,**kwargs)
 
 class Novel(models.Model):
     title = models.CharField(max_length=200, null=True)
@@ -57,9 +63,6 @@ class Novel(models.Model):
     def get_absolute_url_write_chapters(self):
         return reverse('my_work_detail',kwargs={'slug':self.slug})
     
-
-
-
 
 class Chapter(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True, on_delete=models.CASCADE)
