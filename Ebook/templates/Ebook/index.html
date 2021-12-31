@@ -21,7 +21,7 @@
         <div class="index-intro">
             {% for novel in novels %}
             <div class="item top-1" itemscope="" itemtype="https://schema.org/Book">
-                <a href="https://truyenfull.vn/mao-son-troc-quy-nhan/" itemprop="url">
+                <a href="{{ novel.get_absolute_url }}" itemprop="url">
                     <span class="full-label">
                     </span>
                     <img src="{{ MEDIA_URL }}/{{ novel.thumbnail }}">

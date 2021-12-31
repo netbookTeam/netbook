@@ -22,3 +22,7 @@ class CreateNovelForm(ModelForm):
 		model = Novel
 		fields = ['title' , 'description' , 'thumbnail' , 'tags']
 
+class CreateChapterForm(ModelForm):
+	class Meta:
+		model = Chapter
+		fields = ['title' , 'number' , 'content']

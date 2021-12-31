@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>{{ novel.title }}</title>
+    <style>
+        img{
+            height: 500px;
+            width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <img src="{{ MEDIA_URL }}/{{ novel.thumbnail }}" alt="">
+            </div>
+            <div class="col-sm-6">
+                <h1>{{ novel.title }}</h1>
+                <i><h3> Tác giả :  {{ novel.userinfo.name }}</h3></i>
+                <h3>Mô tả</h3>
+                <p>{{ novel.description }}</p>
+                <h3>Thể loại</h3>
+                <ul>
+                    {% for tag in tags %}
+                        <li><p>{{ tag.name }}</p></li>
+                    {% endfor %}
+                </ul>
+                
+            </div>
+            
+        </div>
+        <h1>Chương : </h1>
+        <ul>
+            {% for chapter in chapters %}
+                <li><h3><a href="{{ chapter.get_absolute_url }}">Chương {{ chapter.number }} - {{ chapter.title }}</a></h3></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

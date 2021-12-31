@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from django.db.models.fields import IntegerField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
+from django.template.defaultfilters import slugify
+from django.urls import reverse
 
 # Create your models here.
 
@@ -35,12 +37,26 @@ class Tag(models.Model):
 
 class Novel(models.Model):
     title = models.CharField(max_length=200, null=True)
+    slug = models.SlugField(null=False)
     description = models.TextField()
     thumbnail = models.ImageField(default="images/placeholder.png", null=True, blank=True,upload_to="images/")
     userinfo = ForeignKey(UserInfo,null=True, blank=True,on_delete=models.CASCADE)
     tags = ManyToManyField(Tag)
+
     def __str__(self):    
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args,**kwargs)
+    
+    def get_absolute_url(self):
+        return reverse('detail',kwargs={'slug':self.slug})
+    
+    def get_absolute_url_write_chapters(self):
+        return reverse('my_work_detail',kwargs={'slug':self.slug})
+    
 
 
 
@@ -49,9 +65,14 @@ class Chapter(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True, on_delete=models.CASCADE)
     number = IntegerField()
     content = models.TextField()
+    title = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return str(self.novel.title)+"_"+str(self.number)
+    
+    def get_absolute_url(self):
+        slug = self.novel.slug
+        return reverse('read',kwargs={'slug':slug,'chapter_number':self.number})
     
 
 class NovelTag(models.Model):

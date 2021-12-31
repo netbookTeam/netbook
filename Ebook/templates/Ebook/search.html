@@ -15,7 +15,7 @@
         <div class="list list-truyen col-xs-12">
             {% for novel in novels %}
             <div class="space">
-                <div class="row" itemscope="" itemtype="https://schema.org/Book"><div class="col-xs-3"><div><img src="{{ MEDIA_URL }}/{{ novel.thumbnail }}" class="cover" alt="{{ novel.title }}"></div></div><div class="col-xs-7"><div><span class="glyphicon glyphicon-book"></span> <h3 class="truyen-title" itemprop="name"><a href="https://truyenfull.vn/tam-tan-ky/" title="{{ novel.title }}" itemprop="url">{{ novel.title }}</a></h3><span class="label-title label-full"></span><span class="label-title label-hot"></span><span class="author" itemprop="author"><span class="glyphicon glyphicon-pencil"></span>{{ novel.userinfo.name }}</span></div></div><div class="col-xs-2 text-info"></div></div>
+                <div class="row" itemscope="" itemtype="https://schema.org/Book"><div class="col-xs-3"><div><img src="{{ MEDIA_URL }}/{{ novel.thumbnail }}" class="cover" alt="{{ novel.title }}"></div></div><div class="col-xs-7"><div><span class="glyphicon glyphicon-book"></span> <h3 class="truyen-title" itemprop="name"><a href="{{ novel.get_absolute_url }}" title="{{ novel.title }}" itemprop="url">{{ novel.title }}</a></h3><span class="label-title label-full"></span><span class="label-title label-hot"></span><span class="author" itemprop="author"><span class="glyphicon glyphicon-pencil"></span>{{ novel.userinfo.name }}</span></div></div><div class="col-xs-2 text-info"></div></div>
             </div>
             {% endfor %}
         </div>
