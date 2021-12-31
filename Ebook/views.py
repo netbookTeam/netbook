@@ -17,8 +17,12 @@ from django.core.files import File
 
 def index(request):
     novels=list(Novel.objects.all())
+    tags = list(Tag.objects.all())
     print(type(novels))
-    return render(request,"Ebook/index.html",{"novels":novels})
+    return render(request,"Ebook/index.html",{
+        "novels":novels,
+        "tags":tags
+    })
 
 @authenticated_user
 def home(request):
@@ -172,3 +176,23 @@ def createChapter(request, slug=None):
     }
     return render(request,"Ebook/create_chapter.html",context)
 
+@authenticated_user
+@author_or_admin
+@author_check
+def editChapter(request, slug=None, chapter_number=None):
+    novel = Novel.objects.get(slug=slug)
+    chapter = Chapter.objects.get(novel=novel,number=chapter_number)
+    # form = CreateChapterForm()
+    if request.method == "POST":
+        form = CreateChapterForm(request.POST,instance=chapter)
+        if form.is_valid():
+            form.save()
+            return redirect('my_work_detail',slug=slug)
+    
+    # if slug is not None and chapter_number is not None:
+        # novel = Novel.objects.get(slug=slug)
+    form = CreateChapterForm(instance=chapter)
+    context={
+        "form":form
+    }
+    return render(request,"Ebook/edit_chapter.html",context)
