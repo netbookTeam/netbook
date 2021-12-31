@@ -13,6 +13,7 @@ urlpatterns=[
     path('my_work/',views.myWork,name="my_work"),
     path('my_work/<slug:slug>/',views.myWorkDetail,name="my_work_detail"),
     path('my_work/<slug:slug>/create',views.createChapter,name="create_chapter"),
+    path('my_work/<slug:slug>/<int:chapter_number>/edit',views.editChapter,name="edit_chapter"),
     path('read/<slug:slug>/<int:chapter_number>/',views.read,name="read"),
     path('detail/<slug:slug>/',views.detail,name="detail"),
 ]

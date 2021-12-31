@@ -74,6 +74,10 @@ class Chapter(models.Model):
         slug = self.novel.slug
         return reverse('read',kwargs={'slug':slug,'chapter_number':self.number})
     
+    def get_edit_url(self):
+        slug = self.novel.slug
+        return reverse('edit_chapter',kwargs={'slug':slug,'chapter_number':self.number})
+    
 
 class NovelTag(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
