@@ -58,3 +58,15 @@ def author_or_admin(view_func):
         else:
             return redirect('index')
     return wrapper_function
+
+def self_authenticate(view_func):
+    def wrapper_func(request, username, *args, **kwargs):
+        print("username : ",username)
+        user = User.objects.get(pk=request.user.pk)
+        if username==user.username:
+            return view_func(request, username, *args, **kwargs)
+        else:
+            return redirect('index')
+            
+    return wrapper_func
+    

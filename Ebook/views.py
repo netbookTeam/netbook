@@ -5,8 +5,8 @@ from django.http import HttpResponse
 from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 
-from .models import Novel, Chapter, Tag
-from .decorator import authenticated_user,admin_only,unauthenticated_user, author_check, author_or_admin
+from .models import Novel, Chapter, Tag, UserInfo
+from .decorator import authenticated_user,admin_only,unauthenticated_user, author_check, author_or_admin, self_authenticate
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreateUserForm, CreateUserInfoForm, CreateNovelForm, CreateChapterForm
@@ -206,3 +206,21 @@ def editChapter(request, slug=None, chapter_number=None):
         "form":form
     }
     return render(request,"Ebook/edit_chapter.html",context)
+
+@authenticated_user
+@self_authenticate
+def profile(request, username):
+    print('view profile')
+    user = User.objects.get(username=username)
+    info = UserInfo.objects.get(user=user)
+    if request.method == "POST": 
+        form = CreateUserInfoForm(request.POST,instance=info)
+        if form.is_valid():
+            form.save()
+            return redirect('profile',username=username)
+    
+    form = CreateUserInfoForm(instance=info)
+    context={
+        "form":form
+    }
+    return render(request,"Ebook/user_info.html",context)
