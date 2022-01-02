@@ -31,7 +31,7 @@
                 <h3>Thể loại</h3>
                 <ul>
                     {% for tag in tags %}
-                        <li><p>{{ tag.name }}</p></li>
+                        <li><p><a href="{% url 'search_tag' tag.slug %}">{{ tag.name }}</a></p></li>
                     {% endfor %}
                 </ul>
                 

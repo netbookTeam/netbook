@@ -183,11 +183,16 @@ def editChapter(request, slug=None, chapter_number=None):
     novel = Novel.objects.get(slug=slug)
     chapter = Chapter.objects.get(novel=novel,number=chapter_number)
     # form = CreateChapterForm()
-    if request.method == "POST":
-        form = CreateChapterForm(request.POST,instance=chapter)
-        if form.is_valid():
-            form.save()
+    if request.method == "POST": 
+        is_delete = request.POST.get("delete")
+        if is_delete is not None: 
+            chapter.delete()
             return redirect('my_work_detail',slug=slug)
+        else:
+            form = CreateChapterForm(request.POST,instance=chapter)
+            if form.is_valid():
+                form.save()
+                return redirect('my_work_detail',slug=slug)
     
     # if slug is not None and chapter_number is not None:
         # novel = Novel.objects.get(slug=slug)
