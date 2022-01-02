@@ -3,6 +3,7 @@ from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.template.defaultfilters import slugify
+from django.views.decorators.cache import never_cache
 
 from .models import Novel, Chapter, Tag
 from .decorator import authenticated_user,admin_only,unauthenticated_user, author_check, author_or_admin
@@ -12,6 +13,8 @@ from .forms import CreateUserForm, CreateUserInfoForm, CreateNovelForm, CreateCh
 from django.contrib.auth.models import User
 import urllib
 from django.core.files import File
+from django.views.decorators.cache import cache_control
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 
@@ -161,6 +164,7 @@ def createNovel(request):
 
 @authenticated_user
 @author_or_admin
+@cache_control(no_cache=True, must_revalidate=True)
 def createChapter(request, slug=None):
     novel = Novel.objects.get(slug=slug)
     form = CreateChapterForm()
@@ -176,6 +180,7 @@ def createChapter(request, slug=None):
     }
     return render(request,"Ebook/create_chapter.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True)
 @authenticated_user
 @author_or_admin
 @author_check
