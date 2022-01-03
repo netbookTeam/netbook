@@ -26,3 +26,8 @@ class CreateChapterForm(ModelForm):
 	class Meta:
 		model = Chapter
 		fields = ['title' , 'number' , 'content']
+
+class CreateRatingForm(ModelForm):
+	class Meta:
+		model = Rating
+		fields = ['rate']

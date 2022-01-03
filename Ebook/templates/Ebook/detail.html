@@ -25,6 +25,8 @@
             </div>
             <div class="col-sm-6">
                 <h1>{{ novel.title }}</h1>
+                <h3>Đánh giá</h3>
+                <p>{{ novel.avg_rate }} ★</p>
                 <i><h3> Tác giả :  {{ novel.userinfo.name }}</h3></i>
                 <h3>Mô tả</h3>
                 <p>{{ novel.description }}</p>
@@ -34,6 +36,16 @@
                         <li><p><a href="{% url 'search_tag' tag.slug %}">{{ tag.name }}</a></p></li>
                     {% endfor %}
                 </ul>
+                {% if request.user.is_authenticated %}
+                <h3>Đánh giá</h3>
+                <form action="{% url 'rate' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="novel" value="{{ novel.slug }}">
+                    {{ form.as_p }}
+                    <input type="submit" value="Gửi">
+                    
+                </form>
+                {% endif %}
                 
             </div>
             

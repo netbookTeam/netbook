@@ -18,4 +18,5 @@ urlpatterns=[
     path('read/<slug:slug>/<int:chapter_number>/',views.read,name="read"),
     path('detail/<slug:slug>/',views.detail,name="detail"),
     path('profile/<str:username>/',views.profile,name="profile"),
+    path('rate/',views.rate,name="rate"),
 ]

@@ -1,15 +1,15 @@
 from django.core.checks import messages
 from django.http.response import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse
 from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 
-from .models import Novel, Chapter, Tag, UserInfo
+from .models import Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import authenticated_user,admin_only,unauthenticated_user, author_check, author_or_admin, self_authenticate
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import CreateUserForm, CreateUserInfoForm, CreateNovelForm, CreateChapterForm
+from .forms import CreateUserForm, CreateUserInfoForm, CreateNovelForm, CreateChapterForm, CreateRatingForm
 from django.contrib.auth.models import User
 import urllib
 from django.core.files import File
@@ -106,14 +106,14 @@ def search_tag(request, slug=None):
 @author_or_admin
 @author_check
 def myWorkDetail(request,slug=None):
-    novel = Novel.objects.get(slug=slug)
+    novel = get_object_or_404(Novel,slug=slug)
     chapters = list(Chapter.objects.filter(novel=novel))
     return render(request,"Ebook/my_work_detail.html",{"chapters":chapters})
 
 def read(request,slug=None,chapter_number=None):
     if slug is not None and chapter_number is not None:
-        novel = Novel.objects.get(slug=slug)
-        chapter = Chapter.objects.get(novel=novel,number=chapter_number)
+        novel = get_object_or_404(Novel,slug=slug)
+        chapter = get_object_or_404(Chapter,novel=novel,number=chapter_number)
         return render(request,'Ebook/read.html',{
             "novel" : novel,
             "chapter" : chapter,
@@ -122,7 +122,8 @@ def read(request,slug=None,chapter_number=None):
 
 def detail(request,slug=None):
     if slug is not None:
-        novel = Novel.objects.get(slug=slug)
+        novel = get_object_or_404(Novel,slug=slug)
+        form = CreateRatingForm()
         tags = list(novel.tags.all())
         chapters = list(Chapter.objects.filter(novel=novel))
         print("tags : ",tags)
@@ -130,6 +131,7 @@ def detail(request,slug=None):
             "novel" : novel,
             "tags" : tags,
             "chapters" : chapters,
+            "form": form,
         })
     return redirect('index')
 
@@ -166,7 +168,7 @@ def createNovel(request):
 @author_or_admin
 @cache_control(no_cache=True, must_revalidate=True)
 def createChapter(request, slug=None):
-    novel = Novel.objects.get(slug=slug)
+    novel = get_object_or_404(Novel,slug=slug)
     form = CreateChapterForm()
     if request.method == "POST":
         form = CreateChapterForm(request.POST)
@@ -185,8 +187,10 @@ def createChapter(request, slug=None):
 @author_or_admin
 @author_check
 def editChapter(request, slug=None, chapter_number=None):
-    novel = Novel.objects.get(slug=slug)
-    chapter = Chapter.objects.get(novel=novel,number=chapter_number)
+    novel = get_object_or_404(Novel,slug=slug)
+    # novel = Novel.objects.get(slug=slug)
+    chapter = get_object_or_404(Chapter,novel=novel,number=chapter_number)
+    # chapter = Chapter.objects.get(novel=novel,number=chapter_number)
     # form = CreateChapterForm()
     if request.method == "POST": 
         is_delete = request.POST.get("delete")
@@ -224,3 +228,30 @@ def profile(request, username):
         "form":form
     }
     return render(request,"Ebook/user_info.html",context)
+
+@never_cache
+@authenticated_user
+def rate(request):
+    if request.method == "POST":
+        slug = request.POST.get("novel")
+        novel = Novel.objects.get(slug=slug)
+        if novel is not None:
+            user = User.objects.get(pk=request.user.pk)
+            print("#type : ",type(user))
+            print("#name : ",user.userinfo.name)
+            ratingForm = CreateRatingForm(request.POST)
+            rating = ratingForm.save(commit=False)
+            rating.novel = novel
+            rating.user = user
+            rating.save()
+
+            prev_number=novel.number_rating
+            sum_rate=prev_number*novel.avg_rate
+            sum_rate+=1.0*rating.rate
+            novel.number_rating+=1
+
+            novel.avg_rate=sum_rate/novel.number_rating
+            novel.save()
+
+            return redirect('detail',slug=novel.slug)
+    return redirect('index')

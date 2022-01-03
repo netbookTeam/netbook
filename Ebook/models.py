@@ -1,10 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
-from django.db.models.fields import IntegerField
+from django.db.models.fields import FloatField, IntegerField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.conf import settings
+from django.db.models import CheckConstraint, Q, UniqueConstraint
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -48,6 +51,8 @@ class Novel(models.Model):
     thumbnail = models.ImageField(default="images/placeholder.png", null=True, blank=True,upload_to="images/")
     userinfo = ForeignKey(UserInfo,null=True, blank=True,on_delete=models.CASCADE)
     tags = ManyToManyField(Tag)
+    avg_rate = FloatField(default=0.0)
+    number_rating = IntegerField(default=0)
 
     def __str__(self):    
         return self.title
@@ -88,3 +93,13 @@ class NovelTag(models.Model):
     
     def __str__(self):
         return str(self.novel.title)+" "+str(self.tag.name)
+
+class Rating(models.Model):
+    rate = IntegerField()
+    novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
+    user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            CheckConstraint(check=Q(rate__range=(0, 5)), name='valid_rate'),
+            UniqueConstraint(fields=['user', 'novel'], name='rating_once'),
+        ]
