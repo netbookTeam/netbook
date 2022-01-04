@@ -1,0 +1,11 @@
+{% extends "Ebook/profile.html" %}
+
+{% block content %}
+    <h1>Thông tin chung</h1>
+    <table>
+        <div>{{ userinfo.name }}</div>
+        <div>{{ userinfo.email }}</div>
+        <div>{{ userinfo.address }}</div>
+        <div>{{ userinfo.phone }}</div>
+    </table>
+{% endblock %}

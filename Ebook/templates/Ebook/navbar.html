@@ -42,7 +42,7 @@
   </form>
 
   {% if request.user.is_authenticated %}
-  <span class="hello-msg">Hello, <a href="{% url 'profile' request.user.username %}" class="username">{{request.user.username}}</a></span>
+  <span class="hello-msg">Hello, <a href="{% url 'edit_profile' %}" class="username">{{request.user.username}}</a></span>
   <span ><a  class="hello-msg" href="{% url 'logout' %}">Logout</a></span>
   {% endif %}
 

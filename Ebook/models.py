@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
-from django.db.models.fields import FloatField, IntegerField
+from django.db.models.fields import BooleanField, FloatField, IntegerField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.template.defaultfilters import slugify
 from django.urls import reverse
@@ -103,3 +103,8 @@ class Rating(models.Model):
             CheckConstraint(check=Q(rate__range=(0, 5)), name='valid_rate'),
             UniqueConstraint(fields=['user', 'novel'], name='rating_once'),
         ]
+
+class Following(models.Model):
+    is_followed = BooleanField(default=False)
+    user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
+    novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)

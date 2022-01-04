@@ -1,0 +1,11 @@
+{% extends "Ebook/profile.html" %}
+
+{% block content %}
+    <h1>Danh sách theo dõi</h1>
+    <ul>
+        {% for novel in novels %}
+        <li>{{ novel.title }}</li>
+        {% endfor %}
+    </ul>
+    
+{% endblock %}

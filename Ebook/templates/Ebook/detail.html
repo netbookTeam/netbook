@@ -15,6 +15,17 @@
             height: 500px;
             width: 250px;
         }
+        .btn-link {
+            border: none;
+            outline: none;
+            background: none;
+            cursor: pointer;
+            color: #0000EE;
+            padding: 0;
+            text-decoration: underline;
+            font-family: inherit;
+            font-size: inherit;
+        }
     </style>
 </head>
 <body>
@@ -25,6 +36,21 @@
             </div>
             <div class="col-sm-6">
                 <h1>{{ novel.title }}</h1>
+                
+                {% if is_followed %}
+                <form action="{% url 'follow' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="your_name" value="your_value" class="btn-link">Unfollow</button>
+                    <input type="hidden" name="slug" value="{{ novel.slug }}">
+                </form>
+                {% else %}
+                <form action="{% url 'follow' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="your_name" value="your_value" class="btn-link">Follow</button>
+                    <input type="hidden" name="slug" value="{{ novel.slug }}">
+                </form>
+                {% endif %}
+
                 <h3>Đánh giá</h3>
                 <p>{{ novel.avg_rate }} ★</p>
                 <i><h3> Tác giả :  {{ novel.userinfo.name }}</h3></i>
