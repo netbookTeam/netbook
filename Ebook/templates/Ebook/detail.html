@@ -33,6 +33,12 @@
         <div class="row">
             <div class="col-sm-6">
                 <img src="{{ MEDIA_URL }}/{{ novel.thumbnail }}" alt="">
+                <h1>Chương : </h1>
+                <ul>
+                    {% for chapter in chapters %}
+                        <li><h3><a href="{{ chapter.get_absolute_url }}">Chương {{ chapter.number }} - {{ chapter.title }}</a></h3></li>
+                    {% endfor %}
+                </ul>
             </div>
             <div class="col-sm-6">
                 <h1>{{ novel.title }}</h1>
@@ -72,16 +78,22 @@
                     
                 </form>
                 {% endif %}
-                
-            </div>
-            
-        </div>
-        <h1>Chương : </h1>
-        <ul>
-            {% for chapter in chapters %}
-                <li><h3><a href="{{ chapter.get_absolute_url }}">Chương {{ chapter.number }} - {{ chapter.title }}</a></h3></li>
-            {% endfor %}
-        </ul>
+
+                <h3>Bình luận</h3>
+                {% for comment in comments%}
+                    <b><p>{{ comment.user.userinfo.name }} - {{ comment.date }}</p></b>
+                    <p>{{ comment.content }}</p>
+                    <br>
+                {% endfor %}
+                {% if request.user.is_authenticated %}
+                <h3>Viết bình luận</h3>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="content">
+                    <input type="submit" name="comment" value="Send">
+                </form>
+                {% endif %}
+        
     </div>
 </body>
 </html>

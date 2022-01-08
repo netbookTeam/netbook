@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Following, Novel, Chapter, Rating, Tag, UserInfo
+from .models import Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import authenticated_user,admin_only,unauthenticated_user, author_check, author_or_admin, self_authenticate
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -180,12 +180,14 @@ def read(request,slug=None,chapter_number=None):
         })
     return redirect('index')
 
+@never_cache
 def detail(request,slug=None):
     if slug is not None:
         novel = get_object_or_404(Novel,slug=slug)
         form = CreateRatingForm()
         tags = list(novel.tags.all())
         chapters = list(Chapter.objects.filter(novel=novel))
+        comments = Comment.objects.filter(novel=novel)
 
         is_followed = False
         if request.user.is_authenticated:
@@ -196,6 +198,17 @@ def detail(request,slug=None):
                 following = None
             if following is not None:
                 is_followed = following.is_followed
+            
+            if request.method == "POST":
+                is_comment = request.POST.get("comment")
+                if is_comment is not None:
+                    content = request.POST.get("content")
+                    comment = Comment()
+                    comment.user = user
+                    comment.novel = novel
+                    comment.content = content
+                    comment.save()
+                    return redirect('detail',slug=slug)
         
         print("tags : ",tags)
         return render(request,'Ebook/detail.html',{
@@ -204,6 +217,7 @@ def detail(request,slug=None):
             "chapters" : chapters,
             "form": form,
             "is_followed" : is_followed,
+            "comments" : comments,
         })
     return redirect('index')
 
@@ -273,7 +287,7 @@ def editChapter(request, slug=None, chapter_number=None):
             form = CreateChapterForm(request.POST,instance=chapter)
             if form.is_valid():
                 form.save()
-                return redirect('my_work_detail',slug=slug)
+                # return redirect('my_work_detail',slug=slug)
     
     # if slug is not None and chapter_number is not None:
         # novel = Novel.objects.get(slug=slug)

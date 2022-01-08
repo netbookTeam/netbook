@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.db.models import CheckConstraint, Q, UniqueConstraint
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils import timezone
 
 # Create your models here.
 
@@ -112,5 +113,5 @@ class Following(models.Model):
 class Comment(models.Model):
     user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
     novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
-    date = DateField()
+    date = models.DateTimeField(auto_now=True)
     content = models.CharField(max_length=200, null=True)
