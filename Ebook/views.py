@@ -19,7 +19,7 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
-NOVEL_PER_PAGE=1
+NOVEL_PER_PAGE=3
 
 def index(request):
     novels=list(Novel.objects.all())
@@ -187,6 +187,10 @@ def detail(request,slug=None):
         form = CreateRatingForm()
         tags = list(novel.tags.all())
         chapters = list(Chapter.objects.filter(novel=novel))
+        if len(chapters)>0:
+            first_chapter = chapters[0]
+        else:
+            first_chapter = None
         comments = Comment.objects.filter(novel=novel)
 
         is_followed = False
@@ -218,6 +222,7 @@ def detail(request,slug=None):
             "form": form,
             "is_followed" : is_followed,
             "comments" : comments,
+            "first_chapter" : first_chapter,
         })
     return redirect('index')
 

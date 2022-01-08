@@ -1,99 +1,237 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zxx">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Anime Template">
+    <meta name="keywords" content="Anime, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>{{ novel.title }}</title>
-    <style>
-        img{
-            height: 500px;
-            width: 250px;
-        }
-        .btn-link {
-            border: none;
-            outline: none;
-            background: none;
-            cursor: pointer;
-            color: #0000EE;
-            padding: 0;
-            text-decoration: underline;
-            font-family: inherit;
-            font-size: inherit;
-        }
-    </style>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Anime | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/plyr.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
 </head>
+
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <img src="{{ MEDIA_URL }}/{{ novel.thumbnail }}" alt="">
-                <h1>Chương : </h1>
-                <ul>
-                    {% for chapter in chapters %}
-                        <li><h3><a href="{{ chapter.get_absolute_url }}">Chương {{ chapter.number }} - {{ chapter.title }}</a></h3></li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="col-sm-6">
-                <h1>{{ novel.title }}</h1>
-                
-                {% if is_followed %}
-                <form action="{% url 'follow' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" name="your_name" value="your_value" class="btn-link">Unfollow</button>
-                    <input type="hidden" name="slug" value="{{ novel.slug }}">
-                </form>
-                {% else %}
-                <form action="{% url 'follow' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" name="your_name" value="your_value" class="btn-link">Follow</button>
-                    <input type="hidden" name="slug" value="{{ novel.slug }}">
-                </form>
-                {% endif %}
-
-                <h3>Đánh giá</h3>
-                <p>{{ novel.avg_rate }} ★</p>
-                <i><h3> Tác giả :  {{ novel.userinfo.name }}</h3></i>
-                <h3>Mô tả</h3>
-                <p>{{ novel.description }}</p>
-                <h3>Thể loại</h3>
-                <ul>
-                    {% for tag in tags %}
-                        <li><p><a href="{% url 'search_tag' tag.slug %}">{{ tag.name }}</a></p></li>
-                    {% endfor %}
-                </ul>
-                {% if request.user.is_authenticated %}
-                <h3>Đánh giá</h3>
-                <form action="{% url 'rate' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="novel" value="{{ novel.slug }}">
-                    {{ form.as_p }}
-                    <input type="submit" value="Gửi">
-                    
-                </form>
-                {% endif %}
-
-                <h3>Bình luận</h3>
-                {% for comment in comments%}
-                    <b><p>{{ comment.user.userinfo.name }} - {{ comment.date }}</p></b>
-                    <p>{{ comment.content }}</p>
-                    <br>
-                {% endfor %}
-                {% if request.user.is_authenticated %}
-                <h3>Viết bình luận</h3>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="content">
-                    <input type="submit" name="comment" value="Send">
-                </form>
-                {% endif %}
-        
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
     </div>
-</body>
-</html>
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="header__logo">
+                        <a href="{% url 'index' %}">
+                        <img src="{% static 'img/logo.png' %}" alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="header__nav">
+                        <nav class="header__menu mobile-menu">
+                            <ul>
+                                <li class="active"><a href="{% url 'index' %}">Homepage</a></li>
+                                <li>
+                                    <a href="#">Categories <span class="arrow_carrot-down"></span></a>
+                                    <ul class="dropdown">
+                                        {% for tag in tags %}
+                                        <li><a href="{% url 'search_tag' tag.slug %}">{{ tag.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                {% if user.userinfo.role == 2 or user.userinfo.role == 1 %}
+                                <li><a href="{% url 'my_work' %}">Write</a></li>
+                                {% endif %}
+                                <li><a href="#">About us</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="header__right">
+                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
+                        
+                        {% if not request.user.is_authenticated %}
+                        <a href="{% url 'login' %}"><span class="icon_profile"></span></a>
+                        {% endif %}
+
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'profile_general' %}"><span class="icon_profile"></span></a>
+                        {% endif %}
+
+                        {% if request.user.is_authenticated %}
+                        <a href="{% url 'logout' %}"><span class="arrow_right"></span></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div id="mobile-menu-wrap"></div>
+        </div>
+    </header>
+    <!-- Header End -->
+
+
+
+    <!-- Anime Section Begin -->
+    <section class="anime-details spad">
+        <div class="container">
+            <div class="anime__details__content">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="anime__details__pic set-bg" data-setbg="{{ MEDIA_URL }}/{{ novel.thumbnail }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="anime__details__text">
+                            <div class="anime__details__title">
+                                <h3>{{ novel.title }}</h3>
+                            </div>
+                            <div class="anime__details__rating">
+                                <div class="rating">
+                                    <a href="#"><i class="fa fa-star"></i></a>
+                                    <a href="#"><i class="fa fa-star"></i></a>
+                                    <a href="#"><i class="fa fa-star"></i></a>
+                                    <a href="#"><i class="fa fa-star"></i></a>
+                                    <a href="#"><i class="fa fa-star-half-o"></i></a>
+                                </div>
+                            </div>
+                            <p>{{ novel.description }}</p>
+                            <div class="anime__details__widget">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <ul>
+                                            <li><span>Author:</span>{{ novel.userinfo.name }}</li>
+                                            <li><span>Status:</span> Đang cập nhật</li>
+                                            <li><span>Genre:</span>
+                                                 {% for tag in tags %}
+                                                 <a href="{% url 'search_tag' tag.slug %}">{{ tag.name }}</a>
+                                                 {% if not forloop.last %}, {% endif %}
+                                                 {% endfor %}
+                                            </li>
+                                            <li><span>Rating:</span> {{ novel.avg_rate }} / 161 times</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="anime__details__btn">
+                                {% if is_followed %}
+                                <form action="{% url 'follow' %}" method="POST">
+                                {% csrf_token %}
+                                    <button type="submit" name="your_name" value="your_value" class="follow-btn"><i class="fa fa-heart-o"></i> Unfollow</button>
+                                    <input type="hidden" name="slug" value="{{ novel.slug }}">
+                                </form>
+                                {% else %}
+                                <form action="{% url 'follow' %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" name="your_name" value="your_value" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</button>
+                                    <input type="hidden" name="slug" value="{{ novel.slug }}">
+                                </form>
+                                {% endif %}
+                                {% if first_chapter is not None %}
+                                <a href="{{ first_chapter.get_absolute_url }}" class="watch-btn"><span>Read Now</span> <i
+                                    class="fa fa-angle-right"></i></a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8">
+                        <div class="anime__details__review">
+                            <div class="section-title">
+                                <h5>Reviews</h5>
+                            </div>
+                            {% for comment in comments%}
+                            <div class="anime__review__item">
+                                <div class="anime__review__item__pic">
+                                    <img src="{% static 'img/anime/review-1.jpg' %}" alt="">
+                                </div>
+                                <div class="anime__review__item__text">
+                                    <h6>{{ comment.user.userinfo.name }} - <span>{{ comment.date }}</span></h6>
+                                    <p>{{ comment.content }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="anime__details__form">
+                            <div class="section-title">
+                                <h5>Your Comment</h5>
+                            </div>
+                            <form action="" method="POST">{% csrf_token %}
+                                <textarea placeholder="Your Comment" name="content"></textarea>
+                                <button type="submit" name="comment"><i class="fa fa-location-arrow"></i> Review</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- Anime Section End -->
+
+        <!-- Footer Section Begin -->
+        <footer class="footer">
+            <div class="page-up">
+                <a href="#" id="scrollToTopButton"><span class="arrow_carrot-up"></span></a>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="footer__logo">
+                            <a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt=""></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Thực tập công nhân 2022
+                          <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+
+                      </div>
+                  </div>
+              </div>
+          </footer>
+          <!-- Footer Section End -->
+
+          <!-- Search model Begin -->
+          <div class="search-model">
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <div class="search-close-switch"><i class="icon_close"></i></div>
+                <form class="search-model-form" method="GET" action="{% url 'search' %}"> {% csrf_token %}
+                    <input type="text" id="search-input" name="keyword" placeholder="Search here.....">
+                </form>
+            </div>
+        </div>
+        <!-- Search model end -->
+
+        <!-- Js Plugins -->
+        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/player.js' %}"></script>
+        <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+        <script src="{% static 'js/mixitup.min.js' %}"></script>
+        <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+        <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'js/main.js' %}"></script>
+
+    </body>
+
+    </html>
