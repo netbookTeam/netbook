@@ -1,11 +1,123 @@
-{% extends "Ebook/profile.html" %}
+{% load static %}
+<!DOCTYPE html>
 
-{% block content %}
-    <h1>Thông tin chung</h1>
-    <table>
-        <div>{{ userinfo.name }}</div>
-        <div>{{ userinfo.email }}</div>
-        <div>{{ userinfo.address }}</div>
-        <div>{{ userinfo.phone }}</div>
-    </table>
-{% endblock %}
+<head id="ctl00_Head1">
+    <title>Thông tin chung - Netbook</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/profile_general/styles.min.css' %}" />
+    <link rel="icon" type="image/png" href="{% static '/css/profile_general/favicon-netbook.png' %}" />
+</head>
+
+<body id="ctl00_Body" class="vi-vn site3">
+    <form action="{% url 'search' %}" id="aspnetForm">
+        <header class="header">
+            <div class="navbar">
+                <div class="container">
+                    <div class="navbar-header">
+                        <div class="navbar-brand">
+                            <a class="logo" title="Truyện tranh online" href="activa"><img
+                                    alt="Logo Netbook"
+                                    src="{% static '/css/profile_general/logo-netbook.png' %}" width="170" 
+                                    height="30"/></a>
+                        </div>
+                        <div class="navbar-form navbar-left hidden-xs search-box comicsearchbox">
+                            <div class="input-group">
+                                <input type="text" class="searchinput form-control" placeholder="Tìm truyện..."
+                                    autocomplete="off" name="keyword"/>
+                                <div class="input-group-btn">
+                                    <input type="submit" value="" class="searchbutton btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <ul class="nav-account list-inline hidden-xs pull-right">
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="user-menu fn-userbox dropdown-toggle">{{userinfo.name}}</a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a rel="nofollow" class="user-profile-link-desktop"
+                                        href="{% url 'profile_general' %}"> Trang cá nhân</a>
+                                </li>
+                                <li>
+                                    <a rel="nofollow" class="user-profile-link-desktop"
+                                        href="http://nhattruyenvip.com/Secure/ComicFollowed.aspx"> Truyện theo dõi</a>
+                                </li>
+                                <li>
+                                    <a rel="nofollow" id="user_logout_desktop"
+                                        href="http://nhattruyenvip.com/Logoff.aspx"> Thoát</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <main class="main">
+            <div class="container">
+                <div class="row">
+                    <div id="ctl00_divCenter" class="full-width col-sm-12">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4">
+                                <nav class="user-sidelink clearfix">
+                                    <ul>
+                                        <li class="hvr-sweep-to-right active">
+                                            <a href="{% url 'profile_general' %}"> Thông tin chung</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="http://nhattruyenvip.com/Secure/UserProfile.aspx"> Thông tin tài khoản</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="http://nhattruyenvip.com/Secure/ComicFollowed.aspx"> Truyện theo dõi</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="http://nhattruyenvip.com/Secure/Notifications.aspx"> Thông báo</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="http://nhattruyenvip.com/Secure/ChangePassword.aspx"> Đổi mật khẩu</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="http://nhattruyenvip.com/Logoff.aspx"> Thoát</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-9 col-sm-8">
+                                <div class="user-page clearfix">
+                                    <h1 class="postname">Thông tin chung</h1>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-6">
+                                            <div class="account-info clearfix">
+                                                <h2 class="posttitle">Thông tin tài khoản</h2>
+                                                <a class="link"
+                                                    href="http://nhattruyenvip.com/Secure/UserProfile.aspx">Chỉnh sửa</a>
+                                                <div class="info-detail">
+                                                    <div class="group">
+                                                        <div class="label">Họ và tên</div>
+                                                        <div class="detail">{{userinfo.name}}</div>
+                                                    </div>
+                                                    <div class="group">
+                                                        <div class="label">Email</div>
+                                                        <div class="detail">{{userinfo.email}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="relative">
+                                                <h2 class="posttitle">Truyện theo dõi</h2>
+                                                <a class="link"
+                                                    href="http://nhattruyenvip.com/Secure/ComicFollowed.aspx">Xem tất cả</a>
+                                            </div>
+                                            <section class="comics-followed comics-followed-nopaging user-table clearfix"></section>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </form>
+</body>
+</html>

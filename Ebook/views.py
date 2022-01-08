@@ -16,16 +16,37 @@ import urllib
 from django.core.files import File
 from django.views.decorators.cache import cache_control
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
+NOVEL_PER_PAGE=1
 
 def index(request):
     novels=list(Novel.objects.all())
+    page_number = request.GET.get('page')
+    if page_number is None:
+        page_number=1
+    # print("page : ",page_number)
+    paginator = Paginator(novels, NOVEL_PER_PAGE)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # page = paginator.page(1)
+        raise Http404
+    except EmptyPage:
+        # page = paginator.page(paginator.num_pages)
+        raise Http404
+
+    novels = page.object_list
+    page_obj = paginator.get_page(page_number)
+
     tags = list(Tag.objects.all())
     print(type(novels))
     return render(request,"Ebook/index.html",{
         "novels":novels,
-        "tags":tags
+        "tags":tags,
+        "page_obj":page_obj,
     })
 
 @authenticated_user
@@ -87,21 +108,59 @@ def logoutUser(request):
 	return redirect('login')
 def search(request):
     novels=[]
-    if request.method=="GET":
-        keyword=request.GET.get("keyword")
-        print("keyword : ",keyword)
-        novels=list(Novel.objects.filter(title__contains=keyword))
-        print(novels)
-    return render(request,"Ebook/search.html",{"novels":novels})
+    keyword=request.GET.get("keyword")
+    print("keyword : ",keyword)
+    novels=list(Novel.objects.filter(title__contains=keyword))
+    print(novels)
+    page_number = request.GET.get('page')
+    if page_number is None:
+        page_number=1
+    # print("page : ",page_number)
+    paginator = Paginator(novels, NOVEL_PER_PAGE)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # page = paginator.page(1)
+        raise Http404
+    except EmptyPage:
+        # page = paginator.page(paginator.num_pages)
+        raise Http404
+
+    novels = page.object_list
+    page_obj = paginator.get_page(page_number)
+    return render(request,"Ebook/search.html",{
+        "novels":novels,
+        "page_obj":page_obj,
+    })
 
 def search_tag(request, slug=None):
     novels=[]
-    if request.method=="GET":
-        tag = Tag.objects.get(slug=slug)
-        print("tag : ",tag)
-        novels = list(tag.novel_set.all())
-        print("novels : ",novels)
-    return render(request,"Ebook/search.html",{"novels":novels})
+    tag = Tag.objects.get(slug=slug)
+    print("tag : ",tag)
+    novels = list(tag.novel_set.all())
+    print("novels : ",novels)
+    page_number = request.GET.get('page')
+    if page_number is None:
+        page_number=1
+    # print("page : ",page_number)
+    paginator = Paginator(novels, NOVEL_PER_PAGE)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # page = paginator.page(1)
+        raise Http404
+    except EmptyPage:
+        # page = paginator.page(paginator.num_pages)
+        raise Http404
+
+    novels = page.object_list
+    page_obj = paginator.get_page(page_number)
+    return render(request,"Ebook/search.html",{
+        "novels":novels,
+        "page_obj":page_obj,
+    })
 
 @authenticated_user
 @author_or_admin

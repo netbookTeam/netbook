@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
-from django.db.models.fields import BooleanField, FloatField, IntegerField
+from django.db.models.fields import BooleanField, DateField, FloatField, IntegerField, TextField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.template.defaultfilters import slugify
 from django.urls import reverse
@@ -108,3 +108,9 @@ class Following(models.Model):
     is_followed = BooleanField(default=False)
     user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
     novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
+
+class Comment(models.Model):
+    user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
+    novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
+    date = DateField()
+    content = models.CharField(max_length=200, null=True)
