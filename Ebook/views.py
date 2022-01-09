@@ -19,7 +19,9 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
-NOVEL_PER_PAGE=3
+NOVELS_PER_PAGE=2
+NOVELS_IN_TOP_RATES=3
+
 
 def index(request):
     novels=list(Novel.objects.all())
@@ -27,7 +29,7 @@ def index(request):
     if page_number is None:
         page_number=1
     # print("page : ",page_number)
-    paginator = Paginator(novels, NOVEL_PER_PAGE)
+    paginator = Paginator(novels, NOVELS_PER_PAGE)
 
     try:
         page = paginator.page(page_number)
@@ -116,7 +118,7 @@ def search(request):
     if page_number is None:
         page_number=1
     # print("page : ",page_number)
-    paginator = Paginator(novels, NOVEL_PER_PAGE)
+    paginator = Paginator(novels, NOVELS_PER_PAGE)
 
     try:
         page = paginator.page(page_number)
@@ -144,7 +146,7 @@ def search_tag(request, slug=None):
     if page_number is None:
         page_number=1
     # print("page : ",page_number)
-    paginator = Paginator(novels, NOVEL_PER_PAGE)
+    paginator = Paginator(novels, NOVELS_PER_PAGE)
 
     try:
         page = paginator.page(page_number)
@@ -160,6 +162,7 @@ def search_tag(request, slug=None):
     return render(request,"Ebook/search.html",{
         "novels":novels,
         "page_obj":page_obj,
+        "tag" : tag,
     })
 
 @authenticated_user
@@ -173,10 +176,15 @@ def myWorkDetail(request,slug=None):
 def read(request,slug=None,chapter_number=None):
     if slug is not None and chapter_number is not None:
         novel = get_object_or_404(Novel,slug=slug)
+        # chapter_list = list(novel.chapter_set.all())
+        cnt = novel.chapter_set.count()
+        print("count : ",cnt)
         chapter = get_object_or_404(Chapter,novel=novel,number=chapter_number)
         return render(request,'Ebook/read.html',{
             "novel" : novel,
             "chapter" : chapter,
+            "range" : range(1,cnt+1),
+            "max_range" : cnt,
         })
     return redirect('index')
 
@@ -194,6 +202,7 @@ def detail(request,slug=None):
         comments = Comment.objects.filter(novel=novel)
 
         is_followed = False
+        rating = None
         if request.user.is_authenticated:
             user = User.objects.get(pk=request.user.pk)
             try:
@@ -203,6 +212,10 @@ def detail(request,slug=None):
             if following is not None:
                 is_followed = following.is_followed
             
+            try:
+                rating = Rating.objects.get(user=user,novel=novel)
+            except ObjectDoesNotExist:
+                rating = None
             if request.method == "POST":
                 is_comment = request.POST.get("comment")
                 if is_comment is not None:
@@ -223,6 +236,7 @@ def detail(request,slug=None):
             "is_followed" : is_followed,
             "comments" : comments,
             "first_chapter" : first_chapter,
+            "rating" : rating,
         })
     return redirect('index')
 
@@ -385,3 +399,13 @@ def profile_follow(request):
         novels.append(following.novel)
     print("#### novels : ",novels)
     return render(request,"Ebook/profile_follow.html",{"novels":novels})
+
+def tag_list(request):
+    tag_list = list(Tag.objects.all())
+    context={"tag_list" : tag_list}
+    return context
+
+def top_rates_novel_list(request):
+    novel_list = list(Novel.objects.order_by('-avg_rate'))[:NOVELS_IN_TOP_RATES]
+    context={"novel_list" : novel_list}
+    return context

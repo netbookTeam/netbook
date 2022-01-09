@@ -1,6 +1,6 @@
 /******************************************************************
   Theme Name: Anime
-  Description: Anime video tamplate
+  Descrition: Anime video tamplate
   Author: Colorib
   Author URI: https://colorib.com/
   Version: 1.0
@@ -1939,10 +1939,11 @@ ol {
 }
 
 .page-up {
+	transform: translate(-50%,0);
 	position: absolute;
 	left: 50%;
-	top: -25px;
-	margin-left: -25px;
+	top: -50px;
+	/* margin-left: -25px; */
 }
 
 .page-up a {

@@ -24,6 +24,14 @@
     <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+
+    <style>
+        .fabutton {
+            background: none;
+            padding: 0px;
+            border: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -33,58 +41,7 @@
     </div>
 
     <!-- Header Section Begin -->
-    <header class="header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="header__logo">
-                        <a href="{% url 'index' %}">
-                        <img src="{% static 'img/logo.png' %}" alt="">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="header__nav">
-                        <nav class="header__menu mobile-menu">
-                            <ul>
-                                <li class="active"><a href="{% url 'index' %}">Homepage</a></li>
-                                <li>
-                                    <a href="#">Categories <span class="arrow_carrot-down"></span></a>
-                                    <ul class="dropdown">
-                                        {% for tag in tags %}
-                                        <li><a href="{% url 'search_tag' tag.slug %}">{{ tag.name }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                                {% if user.userinfo.role == 2 or user.userinfo.role == 1 %}
-                                <li><a href="{% url 'my_work' %}">Write</a></li>
-                                {% endif %}
-                                <li><a href="#">About us</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="header__right">
-                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                        
-                        {% if not request.user.is_authenticated %}
-                        <a href="{% url 'login' %}"><span class="icon_profile"></span></a>
-                        {% endif %}
-
-                        {% if request.user.is_authenticated %}
-                        <a href="{% url 'profile_general' %}"><span class="icon_profile"></span></a>
-                        {% endif %}
-
-                        {% if request.user.is_authenticated %}
-                        <a href="{% url 'logout' %}"><span class="arrow_right"></span></a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div id="mobile-menu-wrap"></div>
-        </div>
-    </header>
+    {%  include 'Ebook/navbar.html' %}
     <!-- Header End -->
 
 
@@ -104,13 +61,54 @@
                                 <h3>{{ novel.title }}</h3>
                             </div>
                             <div class="anime__details__rating">
-                                <div class="rating">
-                                    <a href="#"><i class="fa fa-star"></i></a>
-                                    <a href="#"><i class="fa fa-star"></i></a>
-                                    <a href="#"><i class="fa fa-star"></i></a>
-                                    <a href="#"><i class="fa fa-star"></i></a>
-                                    <a href="#"><i class="fa fa-star-half-o"></i></a>
+                                {% if rating is None %}
+                                <div class="rating" id="rating_form">
+                                    <form action="{% url 'rate' %}" style="display: inline;" method="POST"> {% csrf_token %}
+                                        <input type="hidden" name="novel" value="{{ novel.slug }}">
+                                        <input type="hidden" name="rate" value="1">
+                                        <button type="submit" class="fabutton">
+                                            <i class="rating__star fa fa-star-o"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'rate' %}" style="display: inline;" method="POST"> {% csrf_token %}
+                                        <input type="hidden" name="novel" value="{{ novel.slug }}">
+                                        <input type="hidden" name="rate" value="2">
+                                        <button type="submit" class="fabutton">
+                                            <i class="rating__star fa fa-star-o"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'rate' %}" style="display: inline;" method="POST"> {% csrf_token %}
+                                        <input type="hidden" name="novel" value="{{ novel.slug }}">
+                                        <input type="hidden" name="rate" value="3">
+                                        <button type="submit" class="fabutton">
+                                            <i class="rating__star fa fa-star-o"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'rate' %}" style="display: inline;" method="POST"> {% csrf_token %}
+                                        <input type="hidden" name="novel" value="{{ novel.slug }}">
+                                        <input type="hidden" name="rate" value="4">
+                                        <button type="submit" class="fabutton">
+                                            <i class="rating__star fa fa-star-o"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'rate' %}" style="display: inline;" method="POST"> {% csrf_token %}
+                                        <input type="hidden" name="novel" value="{{ novel.slug }}">
+                                        <input type="hidden" name="rate" value="5">
+                                        <button type="submit" class="fabutton">
+                                            <i class="rating__star fa fa-star-o"></i>
+                                        </button>
+                                    </form>
+                                    
                                 </div>
+                                {% else %}
+                                <div class="rating">
+                                    <a href="#"><i class="rated__star fa fa-star-o"></i></a>
+                                    <a href="#"><i class="rated__star fa fa-star-o"></i></a>
+                                    <a href="#"><i class="rated__star fa fa-star-o"></i></a>
+                                    <a href="#"><i class="rated__star fa fa-star-o"></i></a>
+                                    <a href="#"><i class="rated__star fa fa-star-o"></i></a>
+                                </div>
+                                {% endif %}
                             </div>
                             <p>{{ novel.description }}</p>
                             <div class="anime__details__widget">
@@ -125,12 +123,14 @@
                                                  {% if not forloop.last %}, {% endif %}
                                                  {% endfor %}
                                             </li>
-                                            <li><span>Rating:</span> {{ novel.avg_rate }} / 161 times</li>
+                                            <li><span>Rating:</span> {{ novel.avg_rate }} / {{ novel.number_rating }} times</li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="anime__details__btn">
+                                {% if request.user.is_authenticated %}
                                 {% if is_followed %}
                                 <form action="{% url 'follow' %}" method="POST">
                                 {% csrf_token %}
@@ -143,6 +143,7 @@
                                     <button type="submit" name="your_name" value="your_value" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</button>
                                     <input type="hidden" name="slug" value="{{ novel.slug }}">
                                 </form>
+                                {% endif %}
                                 {% endif %}
                                 {% if first_chapter is not None %}
                                 <a href="{{ first_chapter.get_absolute_url }}" class="watch-btn"><span>Read Now</span> <i
@@ -231,6 +232,61 @@
         <script src="{% static 'js/jquery.slicknav.js' %}"></script>
         <script src="{% static 'js/owl.carousel.min.js' %}"></script>
         <script src="{% static 'js/main.js' %}"></script>
+
+        <script>
+            const ratingStars = [...document.getElementsByClassName("rating__star")];
+            function executeRating(stars) {
+                const starClassActive = "rating__star fa fa-star";
+                const starClassInactive = "rating__star fa fa-star-o";
+                const starsLength = stars.length;
+                let i;
+                stars.map((star) => {
+                    star.onmouseover  = () => {
+                        i = stars.indexOf(star);
+                        let j
+                        if (star.className===starClassInactive) {
+                            for (i; i >= 0; --i) stars[i].className = starClassActive;
+                        } else {
+                            for (i=i+1; i < starsLength; ++i) stars[i].className = starClassInactive;
+                        }
+                    };
+                    
+                });
+                
+            }
+            executeRating(ratingStars);
+        </script>
+
+        <script>
+            const ratingDiv = document.getElementById("rating_form");
+            function outRatingDiv(ratingDiv,stars){
+                const starClassActive = "rating__star fa fa-star";
+                const starClassInactive = "rating__star fa fa-star-o";
+                const starsLength = stars.length;
+                let i;
+                ratingDiv.onmouseout = () => {
+                    let j;
+                    for(j=0;j<starsLength;++j) stars[j].className = starClassInactive;
+                };
+            }
+            outRatingDiv(ratingDiv,ratingStars);
+        </script>
+            
+        <script>
+            const ratedStars = [...document.getElementsByClassName("rated__star")];
+
+            function executeRated(stars) {
+                const starClassActive = "rated__star fa fa-star";
+                const starClassInactive = "rated__star fa fa-star-o";
+                const starsLength = stars.length;
+                let i = parseInt("{{ rating.rate }}");
+                let j
+                for(j=0;j<i;++j) stars[j].className = starClassActive;
+                for(j=i;j<starsLength;++j) stars[j].className = starClassInctive;
+                
+            }
+            executeRated(ratedStars);
+        </script>
 
     </body>
 
