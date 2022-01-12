@@ -23,4 +23,5 @@ urlpatterns=[
     path('rate/',views.rate,name="rate"),
     path('follow/',views.follow,name="follow"),
     path('manage/',views.manage,name="user_manage"),
+    path('ban/',views.ban,name="ban"),
 ]

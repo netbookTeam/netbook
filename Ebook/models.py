@@ -9,6 +9,7 @@ from django.conf import settings
 from django.db.models import CheckConstraint, Q, UniqueConstraint
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
+from datetime import datetime
 
 # Create your models here.
 
@@ -29,9 +30,16 @@ class UserInfo(models.Model):
     phone = models.CharField(max_length=200, null=True)
     address = models.CharField(max_length=200, null=True)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES,blank=True,null=True,default=CUSTOMER)
+
+    ban_time = models.DateTimeField(null=True)
+    prev_ban_level = models.IntegerField(default=0)
     
     def __str__(self):
         return self.name
+    def is_banned(self):
+        delta = datetime.now().date() - self.ban_time.date()
+        print("###model### : ",delta)
+        return delta.total_seconds()<=0.0
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, null=True)

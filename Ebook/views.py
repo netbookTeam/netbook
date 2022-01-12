@@ -7,7 +7,7 @@ from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
-from .decorator import authenticated_user,admin_only,unauthenticated_user, author_check, author_or_admin, self_authenticate
+from .decorator import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CreateUserForm, CreateUserInfoForm, CreateNovelForm, CreateChapterForm, CreateRatingForm
@@ -17,6 +17,8 @@ from django.core.files import File
 from django.views.decorators.cache import cache_control
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from datetime import datetime
+from datetime import timedelta
 
 # Create your views here.
 NOVELS_PER_PAGE=2
@@ -192,6 +194,8 @@ def read(request,slug=None,chapter_number=None):
 @never_cache
 def detail(request,slug=None):
     if slug is not None:
+        user = User.objects.get(pk=request.user.pk)
+        userinfo = UserInfo.objects.get(user=user)
         novel = get_object_or_404(Novel,slug=slug)
         form = CreateRatingForm()
         tags = list(novel.tags.all())
@@ -217,7 +221,7 @@ def detail(request,slug=None):
                 rating = Rating.objects.get(user=user,novel=novel)
             except ObjectDoesNotExist:
                 rating = None
-            if request.method == "POST":
+            if request.method == "POST" and not userinfo.is_banned():
                 is_comment = request.POST.get("comment")
                 if is_comment is not None:
                     content = request.POST.get("content")
@@ -230,6 +234,7 @@ def detail(request,slug=None):
         
         print("tags : ",tags)
         return render(request,'Ebook/detail.html',{
+            "userinfo" : userinfo,
             "novel" : novel,
             "tags" : tags,
             "chapters" : chapters,
@@ -413,11 +418,12 @@ def top_rates_novel_list(request):
 
 @admin_only
 def manage(request):
+    
     name = request.GET.get('name')
     if name is not None:
-        userinfos=list(UserInfo.objects.filter(name=name))
+        userinfos=list(UserInfo.objects.filter(name=name).exclude(role=UserInfo.ADMIN))
     else:
-        userinfos=list(UserInfo.objects.all())
+        userinfos=list(UserInfo.objects.all().exclude(role=UserInfo.ADMIN))
     page_number = request.GET.get('page')
     if page_number is None:
         page_number=1
@@ -439,3 +445,43 @@ def manage(request):
         "userinfos" : userinfos,
         "page_obj" : page_obj,
     })
+
+@admin_only
+def ban(request):
+    # print("date : ",datetime.now())
+    # date_after = datetime.now() + timedelta(days=5)
+    # print("date after : ",date_after)
+    print("in ban")
+    if request.method == "POST":
+        print("in ban POST method")
+        username = request.POST.get("username")
+        if username is not None:
+            user = User.objects.get(username = username)
+            userinfo = UserInfo.objects.get(user = user)
+            print("# name : ",userinfo.name)
+            prev_ban_level = userinfo.prev_ban_level
+            print("# prev_level : ",prev_ban_level)
+            if prev_ban_level==0:
+                userinfo.prev_ban_level=1
+                current_date = datetime.now()
+                ban_to = current_date + timedelta(days=userinfo.prev_ban_level)
+
+                userinfo.ban_time = ban_to
+                userinfo.save()
+                print("save userinfo")
+            else:
+                if userinfo.ban_time is not None:
+                    delta = datetime.now().date() - userinfo.ban_time.date()
+                    print("# delta : ",delta.total_seconds())
+                    if delta.total_seconds()>0.0:
+                        if delta.days <= userinfo.prev_ban_level*2:
+                            userinfo.prev_ban_level*=2
+                            userinfo.ban_time = datetime.now() + timedelta(days=userinfo.prev_ban_level)
+                            userinfo.save()
+                        else:
+                            userinfo.prev_ban_level=1
+                            current_date = datetime.now()
+                            ban_to = current_date + timedelta(days=userinfo.prev_ban_level)
+                            userinfo.ban_time = ban_to
+                            userinfo.save()
+    return redirect('user_manage')

@@ -69,4 +69,15 @@ def self_authenticate(view_func):
             return redirect('index')
             
     return wrapper_func
-    
+
+def check_ban(view_func):
+    def wrapper_func(request, *args, **kwargs):
+        user = User.objects.get(pk=request.user.pk)
+        userinfo = UserInfo.objects.get(user=user)
+        
+        if not userinfo.is_banned():
+            return view_func(request, *args, **kwargs)
+        else:
+            return redirect('index')
+            
+    return wrapper_func
