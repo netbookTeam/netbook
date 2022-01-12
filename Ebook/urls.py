@@ -21,5 +21,6 @@ urlpatterns=[
     path('profile/general',views.profile_general,name="profile_general"),
     path('profile/follow',views.profile_follow,name="profile_follow"),
     path('rate/',views.rate,name="rate"),
-    path('follow/',views.follow,name="follow")
+    path('follow/',views.follow,name="follow"),
+    path('manage/',views.manage,name="user_manage"),
 ]

@@ -21,6 +21,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 NOVELS_PER_PAGE=2
 NOVELS_IN_TOP_RATES=3
+USERS_PER_PAGE=2
 
 
 def index(request):
@@ -409,3 +410,32 @@ def top_rates_novel_list(request):
     novel_list = list(Novel.objects.order_by('-avg_rate'))[:NOVELS_IN_TOP_RATES]
     context={"novel_list" : novel_list}
     return context
+
+@admin_only
+def manage(request):
+    name = request.GET.get('name')
+    if name is not None:
+        userinfos=list(UserInfo.objects.filter(name=name))
+    else:
+        userinfos=list(UserInfo.objects.all())
+    page_number = request.GET.get('page')
+    if page_number is None:
+        page_number=1
+    # print("page : ",page_number)
+    paginator = Paginator(userinfos, USERS_PER_PAGE)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # page = paginator.page(1)
+        raise Http404
+    except EmptyPage:
+        # page = paginator.page(paginator.num_pages)
+        raise Http404
+
+    userinfos = page.object_list
+    page_obj = paginator.get_page(page_number)
+    return render(request,"Ebook/user_manage.html",{
+        "userinfos" : userinfos,
+        "page_obj" : page_obj,
+    })

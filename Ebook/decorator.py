@@ -14,8 +14,7 @@ def authenticated_user(view_func):
 
 def admin_only(view_func):
     def wrapper_function(request, *args, **kwargs): 
-        user= request.user._wrapped if hasattr(request.user,'_wrapped') else request.user # get User from request.user
-        print("type : ",type(user))
+        user = User.objects.get(pk=request.user.pk)
         # u=User.objects.get(pk=request.user.pk)
         # print(u.userinfo)
         if user.userinfo.role==UserInfo.ADMIN:
