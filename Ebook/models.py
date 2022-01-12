@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
-from django.db.models.fields import FloatField, IntegerField
+from django.db.models.fields import BooleanField, DateField, FloatField, IntegerField, TextField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.conf import settings
 from django.db.models import CheckConstraint, Q, UniqueConstraint
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils import timezone
 
 # Create your models here.
 
@@ -103,3 +104,14 @@ class Rating(models.Model):
             CheckConstraint(check=Q(rate__range=(0, 5)), name='valid_rate'),
             UniqueConstraint(fields=['user', 'novel'], name='rating_once'),
         ]
+
+class Following(models.Model):
+    is_followed = BooleanField(default=False)
+    user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
+    novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
+
+class Comment(models.Model):
+    user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
+    novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=True)
+    content = models.CharField(max_length=200, null=True)

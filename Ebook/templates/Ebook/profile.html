@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        .tag{
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    {% include 'Ebook/navbar.html' %}
+    <div class="row">
+        <div class="col-sm-3" style="background-color:gray;">
+            <h4 class="tag">
+                <a href="{% url 'profile_general' %}">Thông tin chung</a>    
+            </h4>
+            <h4 class="tag">
+                <a href="{% url 'edit_profile' %}">Thông tin tài khoản</a>    
+            </h4>
+            <h4 class="tag">
+                <a href="{% url 'profile_follow' %}">Truyện theo dõi</a>    
+            </h4>
+        </div>
+        <div class="col-sm-9"">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>

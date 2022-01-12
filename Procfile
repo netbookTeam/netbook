@@ -1,0 +1,1 @@
+web: gunicorn netbook.wsg --log-file -

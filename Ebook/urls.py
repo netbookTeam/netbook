@@ -17,6 +17,9 @@ urlpatterns=[
     path('my_work/<slug:slug>/<int:chapter_number>/edit',views.editChapter,name="edit_chapter"),
     path('read/<slug:slug>/<int:chapter_number>/',views.read,name="read"),
     path('detail/<slug:slug>/',views.detail,name="detail"),
-    path('profile/<str:username>/',views.profile,name="profile"),
+    path('profile/edit',views.edit_profile,name="edit_profile"),
+    path('profile/general',views.profile_general,name="profile_general"),
+    path('profile/follow',views.profile_follow,name="profile_follow"),
     path('rate/',views.rate,name="rate"),
+    path('follow/',views.follow,name="follow")
 ]
