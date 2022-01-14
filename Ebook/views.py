@@ -19,12 +19,16 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime
 from datetime import timedelta
+from django.utils import timezone
+import datetime as dt
+from django.utils import timezone
+import pytz
 
 # Create your views here.
 NOVELS_PER_PAGE=2
 NOVELS_IN_TOP_RATES=3
 USERS_PER_PAGE=2
-
+LOCK_OUT_TIME = 7 # (days)
 
 def index(request):
     novels=list(Novel.objects.all())
@@ -199,6 +203,20 @@ def detail(request,slug=None):
         novel = get_object_or_404(Novel,slug=slug)
         form = CreateRatingForm()
         tags = list(novel.tags.all())
+
+        ############ test
+        # local_tz = pytz.timezone('Asia/Bangkok')
+        # current = timezone.now().replace(tzinfo=pytz.utc).astimezone(local_tz)
+        # userinfo_ban = userinfo.ban_time.replace(tzinfo=pytz.utc).astimezone(local_tz)
+        # print("current day : ",current)
+        # print("ban day : ",userinfo_ban)
+
+        # is_banned = (current <= userinfo_ban)
+
+        # print("is banned : ",is_banned)
+
+        ############ endtest
+
         chapters = list(Chapter.objects.filter(novel=novel))
         if len(chapters)>0:
             first_chapter = chapters[0]
@@ -485,3 +503,16 @@ def ban(request):
                             userinfo.ban_time = ban_to
                             userinfo.save()
     return redirect('user_manage')
+
+@admin_only
+def lock_out(request):
+    print("in lock out")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        if username is not None:
+            user = User.objects.get(username = username)
+            userinfo = UserInfo.objects.get(user = user)
+            lock_out_time = userinfo.lock_out_time
+            userinfo.lock_out_time = datetime.now()
+            userinfo.lock_out_time += timedelta(days=LOCK_OUT_TIME)
+            userinfo.save()

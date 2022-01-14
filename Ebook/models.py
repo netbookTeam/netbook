@@ -10,6 +10,7 @@ from django.db.models import CheckConstraint, Q, UniqueConstraint
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
 from datetime import datetime
+import pytz
 
 # Create your models here.
 
@@ -24,6 +25,7 @@ class UserInfo(models.Model):
         (CUSTOMER,'customer'),
     )
 
+    
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200, null=True)
@@ -31,15 +33,39 @@ class UserInfo(models.Model):
     address = models.CharField(max_length=200, null=True)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES,blank=True,null=True,default=CUSTOMER)
 
+    lock_out_time = models.DateTimeField(null=True)
+
     ban_time = models.DateTimeField(null=True)
     prev_ban_level = models.IntegerField(default=0)
     
     def __str__(self):
         return self.name
     def is_banned(self):
-        delta = datetime.now().date() - self.ban_time.date()
-        print("###model### : ",delta)
-        return delta.total_seconds()<=0.0
+        if self.ban_time is None:
+            return False
+        local_tz = pytz.timezone('Asia/Bangkok')
+        current = timezone.now().replace(tzinfo=pytz.utc).astimezone(local_tz)
+        userinfo_ban = self.ban_time.replace(tzinfo=pytz.utc).astimezone(local_tz)
+        print("current day : ",current)
+        print("ban day : ",userinfo_ban)
+
+        is_banned = (current <= userinfo_ban)
+
+        print("is banned : ",is_banned)
+        return is_banned
+    def is_locked_out(self):
+        if self.lock_out_time is None:
+            return False
+        local_tz = pytz.timezone('Asia/Bangkok')
+        current = timezone.now().replace(tzinfo=pytz.utc).astimezone(local_tz)
+        userinfo_ban = self.lock_out_time.replace(tzinfo=pytz.utc).astimezone(local_tz)
+        print("current day : ",current)
+        print("ban day : ",userinfo_ban)
+
+        is_banned = (current <= userinfo_ban)
+
+        print("is banned : ",is_banned)
+        return is_banned
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, null=True)
