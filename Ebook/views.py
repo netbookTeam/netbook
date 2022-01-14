@@ -21,6 +21,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 NOVELS_PER_PAGE=2
 NOVELS_IN_TOP_RATES=3
+USERS_PER_PAGE=2
 
 
 def index(request):
@@ -318,22 +319,27 @@ def editChapter(request, slug=None, chapter_number=None):
 
 @authenticated_user
 @self_authenticate
-def edit_profile(request):
-    print('view profile')
+def profile_details(request):
+    # print('view profile')
     username = request.user.username
     user = User.objects.get(username=username)
     info = UserInfo.objects.get(user=user)
     if request.method == "POST": 
         form = CreateUserInfoForm(request.POST,instance=info)
+        print('111')
+        print(form.data)
         if form.is_valid():
+            print('ok')
             form.save()
-            return redirect('edit_profile')
+            return redirect('profile_details')
     
     form = CreateUserInfoForm(instance=info)
+    # print(form)
     context={
         "form":form
     }
-    return render(request,"Ebook/user_info.html",context)
+    # print('view form')
+    return render(request,"Ebook/profile_details.html",context)
 
 @never_cache
 @authenticated_user
@@ -399,6 +405,11 @@ def profile_follow(request):
         novels.append(following.novel)
     print("#### novels : ",novels)
     return render(request,"Ebook/profile_follow.html",{"novels":novels})
+    # return render(request,"Ebook/profile_follow.html")
+
+@authenticated_user
+def profile_change_pass(request):
+    return render(request,"Ebook/profile_change_pass.html")
 
 def tag_list(request):
     tag_list = list(Tag.objects.all())
@@ -409,3 +420,32 @@ def top_rates_novel_list(request):
     novel_list = list(Novel.objects.order_by('-avg_rate'))[:NOVELS_IN_TOP_RATES]
     context={"novel_list" : novel_list}
     return context
+
+@admin_only
+def manage(request):
+    name = request.GET.get('name')
+    if name is not None:
+        userinfos=list(UserInfo.objects.filter(name=name))
+    else:
+        userinfos=list(UserInfo.objects.all())
+    page_number = request.GET.get('page')
+    if page_number is None:
+        page_number=1
+    # print("page : ",page_number)
+    paginator = Paginator(userinfos, USERS_PER_PAGE)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # page = paginator.page(1)
+        raise Http404
+    except EmptyPage:
+        # page = paginator.page(paginator.num_pages)
+        raise Http404
+
+    userinfos = page.object_list
+    page_obj = paginator.get_page(page_number)
+    return render(request,"Ebook/user_manage.html",{
+        "userinfos" : userinfos,
+        "page_obj" : page_obj,
+    })

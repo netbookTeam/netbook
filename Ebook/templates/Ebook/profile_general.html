@@ -3,13 +3,12 @@
 
 <head id="ctl00_Head1">
     <title>Thông tin chung - Netbook</title>
-    <link rel="stylesheet" type="text/css" href="{% static '/css/profile_general/styles.min.css' %}" />
-    <link rel="icon" type="image/png" href="{% static '/css/profile_general/favicon-netbook.png' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static '/css/styles.profile.css' %}" />
+    <link rel="icon" type="image/png" href="{% static '/css/favicon-netbook.png' %}" />
 </head>
 
 <body id="ctl00_Body" class="vi-vn site3">
-    <form action="{% url 'search' %}" id="aspnetForm">
-        <header class="header">
+        {% comment %} <header class="header">
             <div class="navbar">
                 <div class="container">
                     <div class="navbar-header">
@@ -51,7 +50,7 @@
                     </ul>
                 </div>
             </div>
-        </header>
+        </header> {% endcomment %}
         <main class="main">
             <div class="container">
                 <div class="row">
@@ -64,20 +63,18 @@
                                             <a href="{% url 'profile_general' %}"> Thông tin chung</a>
                                         </li>
                                         <li class="hvr-sweep-to-right">
-                                            <a href="http://nhattruyenvip.com/Secure/UserProfile.aspx"> Thông tin tài khoản</a>
+                                            <a href="{% url 'profile_details' %}"> Thông tin tài khoản</a>
                                         </li>
                                         <li class="hvr-sweep-to-right">
-                                            <a href="http://nhattruyenvip.com/Secure/ComicFollowed.aspx"> Truyện theo dõi</a>
+                                            <a href="{% url 'profile_follow' %}"> Truyện theo dõi</a>
                                         </li>
-                                        <li class="hvr-sweep-to-right">
+                                        {% comment %} <li class="hvr-sweep-to-right">
                                             <a href="http://nhattruyenvip.com/Secure/Notifications.aspx"> Thông báo</a>
-                                        </li>
+                                        </li> {% endcomment %}
                                         <li class="hvr-sweep-to-right">
-                                            <a href="http://nhattruyenvip.com/Secure/ChangePassword.aspx"> Đổi mật khẩu</a>
+                                            <a href="{% url 'profile_change_pass' %}"> Đổi mật khẩu</a>
                                         </li>
-                                        <li class="hvr-sweep-to-right">
-                                            <a href="http://nhattruyenvip.com/Logoff.aspx"> Thoát</a>
-                                        </li>
+                                        
                                     </ul>
                                 </nav>
                             </div>
@@ -89,7 +86,7 @@
                                             <div class="account-info clearfix">
                                                 <h2 class="posttitle">Thông tin tài khoản</h2>
                                                 <a class="link"
-                                                    href="http://nhattruyenvip.com/Secure/UserProfile.aspx">Chỉnh sửa</a>
+                                                    href="{% url 'profile_general' %}">Chỉnh sửa</a>
                                                 <div class="info-detail">
                                                     <div class="group">
                                                         <div class="label">Họ và tên</div>
@@ -102,14 +99,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12">
+                                        {% comment %} <div class="col-xs-12">
                                             <div class="relative">
                                                 <h2 class="posttitle">Truyện theo dõi</h2>
                                                 <a class="link"
                                                     href="http://nhattruyenvip.com/Secure/ComicFollowed.aspx">Xem tất cả</a>
                                             </div>
                                             <section class="comics-followed comics-followed-nopaging user-table clearfix"></section>
-                                        </div>
+                                        </div> {% endcomment %}
                                     </div>
                                 </div>
                             </div>
@@ -118,6 +115,5 @@
                 </div>
             </div>
         </main>
-    </form>
 </body>
 </html>

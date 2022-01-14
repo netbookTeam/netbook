@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head id="ctl00_Head1">
+    <title>Thông tin chung - Netbook</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/styles.profile_details.css' %}" />
+    <link rel="icon" type="image/png" href="{% static '/css/favicon-netbook.png' %}" />
+</head>
+
+<body id="ctl00_Body" class="vi-vn site3">
+    <form method="POST">
+        {% csrf_token %}
+        <main class="main">
+            <div class="container">
+                <div class="row">
+                    <div id="ctl00_divCenter" class="full-width col-sm-12">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4">
+                                <nav class="user-sidelink clearfix">
+                                    <ul>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="{% url 'profile_general' %}"> Thông tin chung</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right active">
+                                            <a href="{% url 'profile_details' %}"> Thông tin tài khoản</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="{% url 'profile_follow' %}"> Truyện theo dõi</a>
+                                        </li>
+                                        {% comment %} <li class="hvr-sweep-to-right">
+                                            <a href="http://nhattruyenvip.com/Secure/Notifications.aspx"> Thông báo</a>
+                                        </li> {% endcomment %}
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="{% url 'profile_change_pass' %}"> Đổi mật khẩu</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-9 col-sm-8">
+                                <div id="ctl00_mainContent_pnlUser" class="user-page clearfix">
+                                    <h1 class="postname">Thông tin tài khoản </h1>
+                                    <div class="account-info clearfix">
+                                        <h2 class="posttitle">Cập nhật thông tin tài khoản</h2>
+                                        <div class="account-form clearfix">
+                                            <div class="row">
+                                                <div class="col-sm-9">
+                                                    <div id="ctl00_mainContent_divUserName" class="form-group">
+                                                        <label for="user" class="control-label">Tài khoản</label>
+                                                        <input type="text" value="{{request.user.username}}"
+                                                            tabindex="10" class="form-control" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email"
+                                                            class="control-label">Địa chỉ email</label>
+                                                        {{form.email}}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="name"
+                                                        class="control-label">Họ và Tên</label>
+                                                        {{form.name}}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="phone"
+                                                        class="control-label">Số điện thoại</label>
+                                                        {{form.phone}}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="address"
+                                                        class="control-label">Địa chỉ</label>
+                                                        {{form.address}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="button-wrap">
+                                                <input type="submit" value="Cập nhật" class="btn btn-primary">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </form>
+</body>
+</html>

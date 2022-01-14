@@ -17,9 +17,11 @@ urlpatterns=[
     path('my_work/<slug:slug>/<int:chapter_number>/edit',views.editChapter,name="edit_chapter"),
     path('read/<slug:slug>/<int:chapter_number>/',views.read,name="read"),
     path('detail/<slug:slug>/',views.detail,name="detail"),
-    path('profile/edit',views.edit_profile,name="edit_profile"),
+    path('profile/details',views.profile_details,name="profile_details"),
     path('profile/general',views.profile_general,name="profile_general"),
     path('profile/follow',views.profile_follow,name="profile_follow"),
+    path('profile/change_pass',views.profile_change_pass,name="profile_change_pass"),
     path('rate/',views.rate,name="rate"),
-    path('follow/',views.follow,name="follow")
+    path('follow/',views.follow,name="follow"),
+    path('manage/',views.manage,name="user_manage"),
 ]
