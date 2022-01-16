@@ -81,3 +81,4 @@ def check_ban(view_func):
             return redirect('index')
             
     return wrapper_func
+

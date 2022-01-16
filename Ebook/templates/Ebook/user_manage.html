@@ -187,18 +187,13 @@ $(document).ready(function(){
                         <td>{{userinfo.email}}</td>
                         <td>{{userinfo.get_role_display }}</td>
                         <td>
-                            <form action="" style="display: inline;" method="POST"> {% csrf_token %}
-                                <button type="submit" class="btn view">
-                                    <i class="material-icons">&#xE417;</i>
-                                </button>
-                            </form>
                             <form action="{% url 'ban' %}" style="display: inline;" method="POST"> {% csrf_token %}
                                 <button type="submit" class="btn edit" name="username" value="{{userinfo.user.username}}">
                                     <i class="material-icons">&#xE254;</i>
                                 </button>
                             </form>
-                            <form action="" style="display: inline;" method="POST"> {% csrf_token %}
-                                <button type="submit" class="btn delete">
+                            <form action="{% url 'lock_out' %}" style="display: inline;" method="POST"> {% csrf_token %}
+                                <button type="submit" class="btn delete" name="username" value="{{userinfo.user.username}}">
                                     <i class="material-icons">&#xE872;</i>
                                 </button>
                             </form>

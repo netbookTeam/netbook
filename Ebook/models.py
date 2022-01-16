@@ -33,9 +33,9 @@ class UserInfo(models.Model):
     address = models.CharField(max_length=200, null=True)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES,blank=True,null=True,default=CUSTOMER)
 
-    lock_out_time = models.DateTimeField(null=True)
+    lock_out_time = models.DateTimeField(null=True,blank=True)
 
-    ban_time = models.DateTimeField(null=True)
+    ban_time = models.DateTimeField(null=True,blank=True)
     prev_ban_level = models.IntegerField(default=0)
     
     def __str__(self):

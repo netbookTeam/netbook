@@ -22,6 +22,7 @@ from datetime import timedelta
 from django.utils import timezone
 import datetime as dt
 from django.utils import timezone
+from django.contrib.auth import update_session_auth_hash
 import pytz
 
 # Create your views here.
@@ -72,14 +73,18 @@ def loginPage(request):
     if request.method=="POST":
         username=request.POST.get("username")
         password=request.POST.get("password")
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request,user)
-            return redirect('index')
+        user = User.objects.get(username=username)
+        if not user.userinfo.is_locked_out():
+            user.is_active = True
+            user.save()
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request,user)
+                return redirect('index')
+            else:
+                messages.info(request, 'Username OR password is incorrect')
         else:
-            messages.info(request, 'Username OR password is incorrect')
+            messages.info(request, 'Account is locked')
     context = {}
     return render(request, 'Ebook/login.html', context)
 
@@ -342,22 +347,27 @@ def editChapter(request, slug=None, chapter_number=None):
 
 @authenticated_user
 @self_authenticate
-def edit_profile(request):
-    print('view profile')
+def profile_details(request):
+    # print('view profile')
     username = request.user.username
     user = User.objects.get(username=username)
     info = UserInfo.objects.get(user=user)
     if request.method == "POST": 
         form = CreateUserInfoForm(request.POST,instance=info)
+        print('111')
+        print(form.data)
         if form.is_valid():
+            print('ok')
             form.save()
-            return redirect('edit_profile')
+            return redirect('profile_details')
     
     form = CreateUserInfoForm(instance=info)
+    # print(form)
     context={
         "form":form
     }
-    return render(request,"Ebook/user_info.html",context)
+    # print('view form')
+    return render(request,"Ebook/profile_details.html",context)
 
 @never_cache
 @authenticated_user
@@ -423,6 +433,27 @@ def profile_follow(request):
         novels.append(following.novel)
     print("#### novels : ",novels)
     return render(request,"Ebook/profile_follow.html",{"novels":novels})
+    # return render(request,"Ebook/profile_follow.html")
+
+@authenticated_user
+def profile_change_pass(request):
+    user = User.objects.get(pk=request.user.pk)
+    print("current password : ",user.password)
+    if request.method == "POST":
+        old_password = request.POST.get("old_password")
+        new_password1 = request.POST.get("new_password1")
+        new_password2 = request.POST.get("new_password2")
+        flag = user.check_password(old_password)
+        print("flag : ",flag)
+        if flag and new_password1==new_password2:
+            user.set_password(new_password1)
+            user.save()
+            update_session_auth_hash(request,user)
+            messages.success(request, ('Your password was successfully updated!'))
+            return redirect('profile_change_pass')
+        else:
+            messages.error(request, ('Please correct the error below.'))
+    return render(request,"Ebook/profile_change_pass.html")
 
 def tag_list(request):
     tag_list = list(Tag.objects.all())
@@ -491,7 +522,7 @@ def ban(request):
                 if userinfo.ban_time is not None:
                     delta = datetime.now().date() - userinfo.ban_time.date()
                     print("# delta : ",delta.total_seconds())
-                    if delta.total_seconds()>0.0:
+                    if not userinfo.is_banned():
                         if delta.days <= userinfo.prev_ban_level*2:
                             userinfo.prev_ban_level*=2
                             userinfo.ban_time = datetime.now() + timedelta(days=userinfo.prev_ban_level)
@@ -516,3 +547,6 @@ def lock_out(request):
             userinfo.lock_out_time = datetime.now()
             userinfo.lock_out_time += timedelta(days=LOCK_OUT_TIME)
             userinfo.save()
+            user.is_active = False
+            user.save()
+    return redirect('user_manage')

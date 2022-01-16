@@ -16,6 +16,12 @@ class CreateUserInfoForm(ModelForm):
 	class Meta:
 		model = UserInfo
 		fields = ['name' , 'email' , 'phone' , 'address']
+		widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+    	}
 
 class CreateNovelForm(ModelForm):
 	class Meta:
@@ -31,3 +37,8 @@ class CreateRatingForm(ModelForm):
 	class Meta:
 		model = Rating
 		fields = ['rate']
+
+class CreateChangePassForm(forms.Form):
+	oldPassword = forms.CharField(widget=forms.PasswordInput)
+	newPassword1= forms.CharField(widget=forms.PasswordInput)
+	newPassword2= forms.CharField(widget=forms.PasswordInput)

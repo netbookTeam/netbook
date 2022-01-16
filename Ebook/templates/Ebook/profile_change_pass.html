@@ -1,0 +1,367 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head id="ctl00_Head1">
+    <title>Thông tin chung - Netbook</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/styles.profile.css' %}" />
+    <link rel="icon" type="image/png" href="{% static '/css/favicon-netbook.png' %}" />
+</head>
+
+<body id="ctl00_Body" class="vi-vn site3">
+    <form method="POST">
+        {% comment %} <header class="header">
+            <div class="navbar">
+                <div class="container">
+                    <div class="navbar-header">
+                        <div class="navbar-brand">
+                            <a class="logo" title="Truyện tranh online" href="activa"><img
+                                    alt="Logo Netbook"
+                                    src="{% static '/css/profile_general/logo-netbook.png' %}" width="170" 
+                                    height="30"/></a>
+                        </div>
+                        <div class="navbar-form navbar-left hidden-xs search-box comicsearchbox">
+                            <div class="input-group">
+                                <input type="text" class="searchinput form-control" placeholder="Tìm truyện..."
+                                    autocomplete="off" name="keyword"/>
+                                <div class="input-group-btn">
+                                    <input type="submit" value="" class="searchbutton btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <ul class="nav-account list-inline hidden-xs pull-right">
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="user-menu fn-userbox dropdown-toggle">{{userinfo.name}}</a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a rel="nofollow" class="user-profile-link-desktop"
+                                        href="{% url 'profile_general' %}"> Trang cá nhân</a>
+                                </li>
+                                <li>
+                                    <a rel="nofollow" class="user-profile-link-desktop"
+                                        href="http://nhattruyenvip.com/Secure/ComicFollowed.aspx"> Truyện theo dõi</a>
+                                </li>
+                                <li>
+                                    <a rel="nofollow" id="user_logout_desktop"
+                                        href="http://nhattruyenvip.com/Logoff.aspx"> Thoát</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header> {% endcomment %}
+        <main class="main">
+            <div class="container">
+                <div class="row">
+                    <div id="ctl00_divCenter" class="full-width col-sm-12">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4">
+                                <nav class="user-sidelink clearfix">
+                                    <ul>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="{% url 'profile_general' %}"> Thông tin chung</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="{% url 'profile_details' %}"> Thông tin tài khoản</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="{% url 'profile_follow' %}"> Truyện theo dõi</a>
+                                        </li>
+                                        {% comment %} <li class="hvr-sweep-to-right">
+                                            <a href="http://nhattruyenvip.com/Secure/Notifications.aspx"> Thông báo</a>
+                                        </li> {% endcomment %}
+                                        <li class="hvr-sweep-to-right active">
+                                            <a href="{% url 'profile_change_pass' %}"> Đổi mật khẩu</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-9 col-sm-8">
+                                <div id="ctl00_mainContent_pnlPassword" class="user-page clearfix">
+                                    <h1 class="postname">Đổi mật khẩu</h1>
+                                    <div class="row">
+                                        <div class="col-sm-9">
+                                            <table id="ctl00_mainContent_ChangePassword1" cellspacing="0"
+                                                cellpadding="0" style="width: 100%; border-collapse: collapse">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <form action="" method="POST"> {% csrf_token %}
+                                                                <div id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_divCurrentPassword"
+                                                                class="form-group">
+                                                                <label
+                                                                    for="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPassword"
+                                                                    class="control-label">Mật khẩu cũ</label>
+                                                                <input
+                                                                    name="old_password"
+                                                                    type="password"
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPassword"
+                                                                    class="form-control" />
+                                                                <span
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired"
+                                                                    title="Vui lòng nhập Mật khẩu cũ." class="error"
+                                                                    style="display: none">Vui lòng nhập Mật khẩu cũ.</span>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label
+                                                                    for="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPassword"
+                                                                    class="control-label">Mật khẩu mới</label>
+                                                                <input
+                                                                    name="new_password1"
+                                                                    type="password"
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPassword"
+                                                                    class="form-control" />
+                                                                <span
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired"
+                                                                    title="Vui lòng nhập Mật khẩu mới." class="error"
+                                                                    style="display: none">Vui lòng nhập Mật khẩu mới.</span>
+                                                                <span
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator"
+                                                                    class="error" style="display: none"></span>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label
+                                                                    for="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPassword"
+                                                                    class="control-label">Xác nhận mật khẩu mới</label>
+                                                                <input
+                                                                    name="new_password2"
+                                                                    type="password"
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPassword"
+                                                                    class="form-control" />
+                                                                <span
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired"
+                                                                    title="Vui lòng nhập Xác nhận mật khẩu."
+                                                                    class="error" style="display: none">Vui lòng nhập
+                                                                    Xác nhận mật khẩu.</span>
+                                                                <span
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare"
+                                                                    title="Mật khẩu không khớp." class="error"
+                                                                    style="display: none">Mật khẩu không khớp.</span>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button type="submit"
+                                                                    name="ctl00$mainContent$ChangePassword1$ChangePasswordContainerID$ChangePasswordPushButton"
+                                                                    value="Đổi mật khẩu"
+                                                                    onclick='javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions("ctl00$mainContent$ChangePassword1$ChangePasswordContainerID$ChangePasswordPushButton", "", true, "ChangePassword1", "", false, false))'
+                                                                    id="ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ChangePasswordPushButton"
+                                                                    class="btn btn-primary" />
+                                                                
+                                                            </div>
+                                                            {% for message in messages %}
+                                                                <p id="messages">{{message}}</p>
+                                                            {% endfor %}
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </form>
+    <script type="text/javascript">
+        //<![CDATA[
+        var Page_Validators = new Array(
+            document.getElementById(
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired"
+            ),
+            document.getElementById(
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired"
+            ),
+            document.getElementById(
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator"
+            ),
+            document.getElementById(
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired"
+            ),
+            document.getElementById(
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare"
+            )
+        );
+    //]]>
+    </script>
+    <script type="text/javascript">
+        //<![CDATA[
+        var ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired =
+            document.all
+                ? document.all[
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired"
+                ]
+                : document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired"
+                );
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired.controltovalidate =
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPassword";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired.errormessage =
+            "Vui lòng nhập Mật khẩu cũ.";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired.display =
+            "Dynamic";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired.validationGroup =
+            "ChangePassword1";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired.evaluationfunction =
+            "RequiredFieldValidatorEvaluateIsValid";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired.initialvalue =
+            "";
+        var ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired =
+            document.all
+                ? document.all[
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired"
+                ]
+                : document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired"
+                );
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired.controltovalidate =
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPassword";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired.errormessage =
+            "Vui lòng nhập Mật khẩu mới.";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired.display =
+            "Dynamic";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired.validationGroup =
+            "ChangePassword1";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired.evaluationfunction =
+            "RequiredFieldValidatorEvaluateIsValid";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired.initialvalue =
+            "";
+        var ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator =
+            document.all
+                ? document.all[
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator"
+                ]
+                : document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator"
+                );
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator.controltovalidate =
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPassword";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator.display =
+            "Dynamic";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator.validationGroup =
+            "ChangePassword1";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator.evaluationfunction =
+            "CustomValidatorEvaluateIsValid";
+        var ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired =
+            document.all
+                ? document.all[
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired"
+                ]
+                : document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired"
+                );
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired.controltovalidate =
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPassword";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired.errormessage =
+            "Vui lòng nhập Xác nhận mật khẩu.";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired.display =
+            "Dynamic";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired.validationGroup =
+            "ChangePassword1";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired.evaluationfunction =
+            "RequiredFieldValidatorEvaluateIsValid";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired.initialvalue =
+            "";
+        var ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare =
+            document.all
+                ? document.all[
+                "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare"
+                ]
+                : document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare"
+                );
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare.controltovalidate =
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPassword";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare.errormessage =
+            "Mật khẩu không khớp.";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare.display =
+            "Dynamic";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare.validationGroup =
+            "ChangePassword1";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare.evaluationfunction =
+            "CompareValidatorEvaluateIsValid";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare.controltocompare =
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPassword";
+        ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare.controlhookup =
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPassword";
+    //]]>
+    </script>
+    <script type="text/javascript">
+        //<![CDATA[
+
+        var Page_ValidationActive = false;
+        if (typeof ValidatorOnLoad == "function") {
+            ValidatorOnLoad();
+        }
+
+        function ValidatorOnSubmit() {
+            if (Page_ValidationActive) {
+                return ValidatorCommonOnSubmit();
+            } else {
+                return true;
+            }
+        }
+
+        document.getElementById(
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired"
+        ).dispose = function () {
+            Array.remove(
+                Page_Validators,
+                document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_CurrentPasswordRequired"
+                )
+            );
+        };
+
+        document.getElementById(
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired"
+        ).dispose = function () {
+            Array.remove(
+                Page_Validators,
+                document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRequired"
+                )
+            );
+        };
+
+        document.getElementById(
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator"
+        ).dispose = function () {
+            Array.remove(
+                Page_Validators,
+                document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordRulesValidator"
+                )
+            );
+        };
+
+        document.getElementById(
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired"
+        ).dispose = function () {
+            Array.remove(
+                Page_Validators,
+                document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_ConfirmNewPasswordRequired"
+                )
+            );
+        };
+
+        document.getElementById(
+            "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare"
+        ).dispose = function () {
+            Array.remove(
+                Page_Validators,
+                document.getElementById(
+                    "ctl00_mainContent_ChangePassword1_ChangePasswordContainerID_NewPasswordCompare"
+                )
+            );
+        };
+    //]]>
+    </script>
+</body>
+</html>
