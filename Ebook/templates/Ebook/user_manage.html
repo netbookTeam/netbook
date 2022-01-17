@@ -175,6 +175,8 @@ $(document).ready(function(){
                         <th>Role</th>
                         <!-- <th>Country <i class="fa fa-sort"></i></th> -->
                         <th>Actions</th>
+                        <th>Comment Ban</th>
+                        <th>Logout</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -200,6 +202,20 @@ $(document).ready(function(){
                             <!-- <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a> -->
                             <!-- <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
                             <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a> -->
+                        </td>
+                        <td>
+                            {% if userinfo.is_banned %}
+                            {{ userinfo.ban_time }}
+                            {% else %}
+                            
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if userinfo.is_locked_out %}
+                            {{ userinfo.lock_out_time }}
+                            {% else %}
+                            
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

@@ -149,3 +149,12 @@ class Comment(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
     content = models.CharField(max_length=200, null=True)
+
+class Bookmark(models.Model):
+    user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
+    novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
+    number = IntegerField()
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['user', 'novel'], name='recently_chapter_once'),
+        ]

@@ -5,11 +5,23 @@
     <title>Thông tin chung - Netbook</title>
     <link rel="stylesheet" type="text/css" href="{% static '/css/styles.profile_follow.css' %}" />
     <link rel="icon" type="image/png" href="{% static '/css/favicon-netbook.png' %}" />
+    <style>
+      .follow-link{
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+        color: #0000EE;
+        padding: 0;
+        text-decoration: underline;
+        font-family: inherit;
+        font-size: inherit;
+      }
+    </style>
 </head>
 
 <body id="ctl00_Body" class="vi-vn site3">
-    <form method="POST">
-        {% csrf_token %}
+    <div>
         <main class="main">
             <div class="container">
                 <div class="row">
@@ -53,7 +65,7 @@
                                           </tr>
                                         </thead>
                                         <tbody>
-                                            {%for novel in novels%}
+                                            {% for bookmark,novel in bookmark_novels %}
                                             <tr>
                                                 <td>
                                                 {% comment %} <a class="image" rel="nofollow noopener noreferrer" target="_blank"
@@ -68,27 +80,28 @@
                                             <td>
                                               <a class="comic-name" rel="nofollow noopener noreferrer" target="_blank"
                                                 href="{{ novel.get_absolute_url }}">{{ novel.title }}</a>
-                                              <div class="follow-action">
-                                                <a href="javascript:void(0)" class="follow-link" data-id="28992">
-                                                  <i class="fa fa-times">
-                                                  </i> Bỏ theo dõi
-                                                </a>
+                                              <div class="follow-action"> 
+                                                <form action="{% url 'follow' %}" method="POST"> {% csrf_token %}
+                                                  <input type="hidden" name="slug" value="{{ novel.slug }}">
+                                                  <input type="hidden" name="next" value="{{ request.path }}">
+                                                  <button name="your_name" type="submit" class="follow-link" data-id="28992">
+                                                    Bỏ theo dõi
+                                                  </button>
+                                                </form>
                                               </div>
                                             </td>
                                             <td class="nowrap chapter">
+                                              {% if bookmark is not None %}
                                               <a rel="nofollow noopener noreferrer" target="_blank" class="visited"
-                                                href=""
-                                                title="Chapter 7">Chapter 7</a>
-                                              <br>
-                                              <time class="time">10 ngày trước</time>
+                                                href="{% url 'read' novel.slug bookmark.number %}"
+                                                title="Chapter {{ bookmark.number }}">Chapter {{ bookmark.number }}</a>
+                                              {% endif %}
                                             </td>
                                             <td class="nowrap chapter">
                                               {% if novel.chapter_set.count > 0 %}
                                               <a rel="nofollow noopener noreferrer" target="_blank" class="visited"
                                                 href="{% url 'read' novel.slug novel.chapter_set.count %}"
                                                 title="Chapter {{ novel.chapter_set.count }}">Chapter {{ novel.chapter_set.count }}</a>
-                                              <br>
-                                              <time class="time">10 ngày trước</time>
                                               {% else %}
                                               <p>Chưa có</p>
                                               {% endif %}
@@ -106,6 +119,6 @@
                 </div>
             </div>
         </main>
-    </form>
+    </div>
 </body>
 </html>

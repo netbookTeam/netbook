@@ -134,12 +134,14 @@
                                 {% if is_followed %}
                                 <form action="{% url 'follow' %}" method="POST">
                                 {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
                                     <button type="submit" name="your_name" value="your_value" class="follow-btn"><i class="fa fa-heart-o"></i> Unfollow</button>
                                     <input type="hidden" name="slug" value="{{ novel.slug }}">
                                 </form>
                                 {% else %}
                                 <form action="{% url 'follow' %}" method="POST">
                                     {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
                                     <button type="submit" name="your_name" value="your_value" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</button>
                                     <input type="hidden" name="slug" value="{{ novel.slug }}">
                                 </form>
@@ -172,7 +174,7 @@
                             </div>
                             {% endfor %}
                         </div>
-                        {% if not userinfo.is_banned %}
+                        {% if request.user.is_authenticated and not userinfo.is_banned %}
                         <div class="anime__details__form">
                             <div class="section-title">
                                 <h5>Your Comment</h5>

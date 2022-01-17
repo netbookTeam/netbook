@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
+from .models import Bookmark, Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -192,6 +192,20 @@ def read(request,slug=None,chapter_number=None):
         cnt = novel.chapter_set.count()
         print("count : ",cnt)
         chapter = get_object_or_404(Chapter,novel=novel,number=chapter_number)
+        if request.user.is_authenticated:
+            user = User.objects.get(pk=request.user.pk)
+            print("#user : ",user)
+            print("#novel : ",novel)
+            try:
+                bookmark = Bookmark.objects.get(user=user,novel=novel)
+            except Bookmark.DoesNotExist:
+                bookmark = None
+            if bookmark is None:
+                bookmark=Bookmark()
+                bookmark.user=user
+                bookmark.novel=novel
+            bookmark.number=chapter_number
+            bookmark.save()
         return render(request,'Ebook/read.html',{
             "novel" : novel,
             "chapter" : chapter,
@@ -203,8 +217,10 @@ def read(request,slug=None,chapter_number=None):
 @never_cache
 def detail(request,slug=None):
     if slug is not None:
-        user = User.objects.get(pk=request.user.pk)
-        userinfo = UserInfo.objects.get(user=user)
+        userinfo = None
+        if request.user.is_authenticated:
+            user = User.objects.get(pk=request.user.pk)
+            userinfo = UserInfo.objects.get(user=user)
         novel = get_object_or_404(Novel,slug=slug)
         form = CreateRatingForm()
         tags = list(novel.tags.all())
@@ -225,6 +241,15 @@ def detail(request,slug=None):
         chapters = list(Chapter.objects.filter(novel=novel))
         if len(chapters)>0:
             first_chapter = chapters[0]
+            if request.user.is_authenticated:
+                user = User.objects.get(pk=request.user.pk)
+                try:
+                    bookmark = Bookmark.objects.get(user=user,novel=novel)
+                except Bookmark.DoesNotExist:
+                    bookmark = None
+                if bookmark is not None:
+                    first_chapter = chapters[bookmark.number-1]
+
         else:
             first_chapter = None
         comments = Comment.objects.filter(novel=novel)
@@ -421,18 +446,30 @@ def follow(request):
                 following.novel = novel
             following.is_followed = not following.is_followed
             following.save()
-            return redirect('detail',slug=slug)
+            next = request.POST.get('next', '/')
+            print("nxt : "+next)
+            return HttpResponseRedirect(next)
+            # return redirect('detail',slug=slug)
     return redirect('index')
 
 @authenticated_user
 def profile_follow(request):
     user = User.objects.get(pk=request.user.pk)
     followings = list(Following.objects.filter(user=user,is_followed=True))
-    novels = []
+    bookmark_novels = []
     for following in followings:
-        novels.append(following.novel)
-    print("#### novels : ",novels)
-    return render(request,"Ebook/profile_follow.html",{"novels":novels})
+        bookmark_novel=[]
+        
+        try:
+            bookmark = Bookmark.objects.get(user=user,novel=following.novel)
+        except Bookmark.DoesNotExist:
+            bookmark = None
+
+        bookmark_novel.append(bookmark)
+        bookmark_novel.append(following.novel)
+        bookmark_novels.append(bookmark_novel)
+    print("#### bookmark_novels : ",bookmark_novels)
+    return render(request,"Ebook/profile_follow.html",{"bookmark_novels":bookmark_novels})
     # return render(request,"Ebook/profile_follow.html")
 
 @authenticated_user
