@@ -26,4 +26,5 @@ urlpatterns=[
     path('manage/',views.manage,name="user_manage"),
     path('ban/',views.ban,name="ban"),
     path('lock_out/',views.lock_out,name="lock_out"),
+    path('about_us/',views.about_us,name="about_us"),
 ]

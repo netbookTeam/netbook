@@ -38,7 +38,7 @@
                           {% if user.userinfo.role == 2 or user.userinfo.role == 1 %}
                           <li><a href="{% url 'my_work' %}">Write</a></li>
                           {% endif %}
-                          <li><a href="#">About us</a></li>
+                          <li><a href="{% url 'about_us' %}">About us</a></li>
                           {% if user.userinfo.role == 1 %}
                           <li><a href="{% url 'user_manage' %}">Manage</a></li>
                           {% endif %}

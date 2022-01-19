@@ -27,6 +27,12 @@ class CreateNovelForm(ModelForm):
 	class Meta:
 		model = Novel
 		fields = ['title' , 'description' , 'thumbnail' , 'tags']
+	tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        # choices=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+        # widget=forms.CheckboxInput(attrs={'class': 'checkbox-inline'}),
+    )
 
 class CreateChapterForm(ModelForm):
 	class Meta:

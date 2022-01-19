@@ -1,3 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="{% static '/css/styles.create_novel.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="navbar navbar-default" style="z-index: 999">
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="_token" value="JTfLrz7VPxTMCMRtef2hGUCTAjkw0VW6pD5qRIuW" />
+        <div class="form-group clearfix required">
+            <label class="col-md-2 control-label pt-7 text-right" for="id_title">Tiêu đề</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" name="title" maxlength="200" required id="id_title" />
+          </div>
+        </div>
+        {% comment %} <div class="form-group clearfix">
+          <label class="col-md-2 control-label pt-7 text-right">Tên khác</label>
+          <div class="col-md-8">
+            <input type="text" placeholder="Ngăn cách nhiều tên bằng dấu chấm phẩy ;" class="form-control"
+              name="altname" value="" />
+          </div>
+        </div> {% endcomment %}
+        {% comment %} <div class="form-group clearfix">
+          <label class="col-md-2 control-label text-right"><b>Nội dung nhạy cảm?</b></label>
+          <div class="col-md-8">
+            <input type="checkbox" name="is_mature" value="1" />
+          </div>
+        </div> {% endcomment %}
+        {% comment %} <div class="form-group clearfix required">
+          <label class="col-md-2 control-label pt-7 text-right">Tác giả</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" name="author" value="" />
+          </div>
+        </div> {% endcomment %}
+        {% comment %} <div class="form-group clearfix">
+          <label class="col-md-2 control-label pt-7 text-right">Họa sĩ</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" name="illustrator" value="" />
+          </div>
+        </div> {% endcomment %}
+        {% comment %} <div class="form-group clearfix required">
+          <label class="col-md-2 control-label pt-5 text-right">Loại truyện</label>
+          <div class="col-md-10">
+            <select class="input-sm" name="type" id="select-type">
+              <option value="1">Truyện dịch</option>
+              <option value="2">Truyện convert</option>
+              <option value="3">Truyện sáng tác</option>
+            </select>
+          </div>
+        </div> {% endcomment %}
+        {% comment %} <div class="form-group clearfix required">
+          <label class="col-md-2 control-label pt-5 text-right">Nhóm dịch</label>
+        </div> {% endcomment %}
+
+        <div class="form-group clearfix required">
+            <label class="col-md-2 control-label pt-7 text-right" for="id_description">Description:</label>
+            <div class="col-md-8">
+                <textarea  class="form-control" name="description" rows="5" required id="id_description"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group clearfix required">
+          <label class="col-md-2 control-label pt-7 text-right">Thể loại</label>
+          <div class="col-md-8">
+            {% comment %} <label for="id_tags_5"><input type="checkbox" name="tags" value="6" id="id_tags_5">
+                Huyền huyễn</label> {% endcomment %}
+            {% for tag in tag_list %}
+                <label for="id_tags_{{ forloop.counter }}" class="checkbox-inline" style="width: 130px">
+                  <input type="checkbox" name="tags" value="{{ forloop.counter }}"  id="id_tags_{{ forloop.counter }}" />{{ tag.name }}
+                </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="form-group clearfix required">
+            <label class="col-md-2 control-label pt-7 text-right" for="id_thumbnail">Thumbnail:</label>
+            <div class="col-md-8">
+                <input type="file" name="thumbnail" accept="image/*" id="id_thumbnail">
+            </div>
+        </div>
+
+        {% comment %} <div class="form-group clearfix required">
+          <label class="col-md-2 control-label pt-5 text-right">Tình trạng dịch</label>
+          <div class="col-md-10">
+            <select class="input-sm" name="status">
+              <option value="1">Đang tiến hành</option>
+              <option value="2">Tạm ngưng</option>
+              <option value="3">Đã hoàn thành</option>
+            </select>
+          </div>
+        </div> {% endcomment %}
+        <div class="form-group">
+          <div class="col-md-10 col-md-offset-2">
+            <button type="submit" class="btn btn-primary" >
+              Thêm truyện
+            </button>
+            <a href="javascript: history.back()" class="btn btn-warning">
+              Quay lại
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+</body>
+
+{% comment %} </html>
+
 <!DOCTYPE html>
 <html>
     
@@ -9,6 +122,8 @@
         {% csrf_token %}
         {{ form.media }}
         {{ form.as_p }}
+        {{ form.tags }}
+        {{ form.tags|label_with_classes:"checkbox-inline" }}
         
         <input type="submit" value="Submit">
     </form>
@@ -17,3 +132,43 @@
     
 </body>
 </html>
+
+<tr>
+    <th><label for="id_title">Title:</label></th>
+    <td>
+
+      <input type="text" name="title" maxlength="200" required id="id_title">
+
+
+    </td>
+  </tr>
+
+  <tr>
+    <th><label for="id_description">Description:</label></th>
+    <td>
+
+      <textarea name="description" cols="40" rows="10" required id="id_description">
+</textarea>
+
+
+    </td>
+  </tr>
+
+  <tr>
+    <th><label for="id_thumbnail">Thumbnail:</label></th>
+    <td>
+
+      <input type="file" name="thumbnail" accept="image/*" id="id_thumbnail">
+
+
+    </td>
+  </tr>
+
+  <tr>
+    
+
+
+
+
+    </td>
+  </tr> {% endcomment %}

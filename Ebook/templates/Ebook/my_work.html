@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Stories</title>
+    <style>
+        .white_h2{
+            color: white;
+        }
+    </style>
 </head>
 <body>
     {% include 'Ebook/navbar.html' %}
@@ -14,7 +19,7 @@
             <li><h4><a href="{{ novel.get_absolute_url_write_chapters }}">{{ novel.title }}</a></h2></li>
         {% endfor %}
     </ul>
-    <a href="{% url 'create_novel' %}"><h4>Add new novel</h2></a>
+    <a href="{% url 'create_novel' %}"><h2 class="white_h2">Add new novel</h2></a>
     <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch"><i class="icon_close"></i></div>
