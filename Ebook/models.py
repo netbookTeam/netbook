@@ -10,6 +10,7 @@ from django.db.models import CheckConstraint, Q, UniqueConstraint
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
 from datetime import datetime
+from ckeditor.fields import RichTextField
 import pytz
 
 # Create your models here.
@@ -107,7 +108,7 @@ class Novel(models.Model):
 class Chapter(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True, on_delete=models.CASCADE)
     number = IntegerField()
-    content = models.TextField()
+    content = RichTextField(blank=True,null=True)
     title = models.CharField(max_length=200, null=True)
 
     def __str__(self):
