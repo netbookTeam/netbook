@@ -267,6 +267,7 @@ def createNovel(request):
     context={
         "form":form,
     }
+    print(form)
     return render(request, "Ebook/create_novel.html",context)
 
 
@@ -418,6 +419,7 @@ def tag_list(request):
 
 def top_rates_novel_list(request):
     novel_list = list(Novel.objects.order_by('-avg_rate'))[:NOVELS_IN_TOP_RATES]
+    print(novel_list)
     context={"novel_list" : novel_list}
     return context
 

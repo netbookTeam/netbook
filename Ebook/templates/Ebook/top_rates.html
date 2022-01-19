@@ -24,7 +24,7 @@
                 <div class="product__sidebar__view__item set-bg mix day years"
                     data-setbg="{{ MEDIA_URL }}/{{ novel.thumbnail }}">
                     <div class="ep">{{ novel.chapter_set.count }}</div>
-                    <div class="view">{{ novel.avg_rate }}</div>
+                    <div class="view">{{ novel.avg_rate|floatformat:1 }}</div>
                     <h5><a href="{{ novel.get_absolute_url }}">{{ novel.title }}</a></h5>
                 </div>
             </div>
