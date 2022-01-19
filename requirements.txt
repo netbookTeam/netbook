@@ -1,5 +1,5 @@
 whitenoise==5.3.0
-asgiref @ file:///tmp/build/80754af9/asgiref_1625643473416/work
+asgiref==3.4.1
 certifi==2021.10.8
 Django @ file:///tmp/build/80754af9/django_1625585912945/work
 django-ckeditor==6.2.0
