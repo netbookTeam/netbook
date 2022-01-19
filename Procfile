@@ -1,1 +1,1 @@
-web: gunicorn netbook.wsg --log-file -web: gunicorn <project name>.wsgi --log-file -
+web: gunicorn netbook.wsg --log-file 
