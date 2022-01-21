@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Bookmark, Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import *
@@ -23,6 +24,7 @@ from django.utils import timezone
 import datetime as dt
 from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
 import pytz
 
 # Create your views here.
@@ -211,6 +213,8 @@ def read(request,slug=None,chapter_number=None):
             "chapter" : chapter,
             "range" : range(1,cnt+1),
             "max_range" : cnt,
+            "slug" : slug,
+            "chapter_number" : chapter_number,
         })
     return redirect('index')
 
@@ -312,7 +316,9 @@ def createNovel(request):
             # user= request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
             u=User.objects.get(pk=request.user.pk)
             userInfo=u.userinfo
-            novel=form.save()
+            novel=form.save(commit=False)
+            novel.publication_date=datetime.now()
+            novel.save()
             novel.userinfo=userInfo
             novel.save()
             print(novel.tags.all())
@@ -592,3 +598,33 @@ def lock_out(request):
 
 def about_us(request):
     return render(request,"Ebook/about_us.html")
+
+@csrf_exempt
+def increase_views(request):
+    print("welcome")
+    if request.method == "POST" and request.is_ajax():
+        print("hello increase views")
+        slug = request.POST.get("slug")
+        chapter_number = request.POST.get("chapter_number")
+        print("slug : ",slug)
+        print("chapter_number : ",chapter_number)
+        if slug is not None and chapter_number is not None:
+            try:
+                novel = Novel.objects.get(slug=slug)
+            except Novel.DoesNotExist:
+                novel = None
+            if novel is not None:
+                try:
+                    chapter = Chapter.objects.get(novel=novel,number=chapter_number)
+                except Chapter.DoesNotExist:
+                    chapter = None
+                if chapter is not None:
+                    novel.views+=1
+                    chapter.views+=1
+                    novel.save()
+                    chapter.save()
+                    print("### increase view : done")
+                    return JsonResponse({"ok": True}, status=200)
+    return JsonResponse({"error": "invalid"}, status=400)
+        
+        

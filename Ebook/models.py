@@ -89,6 +89,9 @@ class Novel(models.Model):
     tags = ManyToManyField(Tag)
     avg_rate = FloatField(default=0.0)
     number_rating = IntegerField(default=0)
+    views = IntegerField(default=0)
+    publication_date = models.DateTimeField(null=True,blank=True)
+    status = models.BooleanField(default=False)
 
     def __str__(self):    
         return self.title
@@ -110,6 +113,8 @@ class Chapter(models.Model):
     number = IntegerField()
     content = RichTextField(blank=True,null=True)
     title = models.CharField(max_length=200, null=True)
+    views = IntegerField(default=0)
+    update_date = models.DateTimeField(null=True,blank=True)
 
     def __str__(self):
         return str(self.novel.title)+"_"+str(self.number)
@@ -150,6 +155,7 @@ class Comment(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
     content = models.CharField(max_length=200, null=True)
+    publication_date = models.DateTimeField(null=True,blank=True)
 
 class Bookmark(models.Model):
     user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)

@@ -122,6 +122,57 @@
 
       <!-- Search model Begin -->
       {% include 'Ebook/search_bar.html' %}
+      <script>
+        var session = true;
+        $(window).scroll(function() {
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 100 && session) {
+            session = false;
+            alert("Bạn đã đọc xong truyện");
+            $.ajax({
+                type: 'POST',
+                url : "{% url  'increase_views' %}",
+                data : {
+                    "csrfmiddlewaretoken" : "{{  csrf_token  }}",
+                    "slug" : "{{ slug }}",
+                    "chapter_number" : "{{ chapter_number }}",
+                },
+                success: function (response) {
+                    alert("Thành cong");
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+        }
+        });
+      </script>
+      <!-- <script>
+        var session = true;
+        $(document).scroll(function(e){
+        // grab the scroll amount and the window height
+        var scrollAmount = $(window).scrollTop();
+        var documentHeight = $(document).height();
+
+        // calculate the percentage the user has scrolled down the page
+        var scrollPercent = (scrollAmount / documentHeight) * 100;
+
+        if(scrollPercent > 50 && session) {
+            session=false;
+            // run a function called doSomething
+            doSomething();
+        }
+
+        function doSomething() { 
+            alert("Bạn đã đọc hết truyện");
+            // do something when a user gets 50% of the way down my page
+
+        }
+
+        });
+      </script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <!-- Search model end -->
 
     <!-- Js Plugins -->
